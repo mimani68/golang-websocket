@@ -1,10 +1,22 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"context"
+
+	"github.com/gin-gonic/gin"
+
+	rbd "blackoak.cloud/balout/v2/components/redis"
+)
+
+var ctx = context.Background()
 
 func main() {
 	r := gin.Default()
 	r.GET("/ping", func(c *gin.Context) {
+		err := rbd.RedisClient().Set(ctx, "key", "value", 0).Err()
+		if err != nil {
+			panic(err)
+		}
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
