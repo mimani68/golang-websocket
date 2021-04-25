@@ -1,4 +1,4 @@
-FROM golang:1.16.3-buster
+FROM golang:1.16.3-buster as debug
 
 ENV GOPATH /go:$GOPATH
 ENV PATH /go/bin:$PATH
@@ -13,4 +13,4 @@ EXPOSE 8080
 # RUN go build -o main main.go
 # CMD ["./main"]
 
-CMD [ "go", "run", "main.go" ]
+# CMD [ "go", "run", "main.go" ]

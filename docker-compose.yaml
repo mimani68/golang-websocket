@@ -2,16 +2,17 @@ version: '3.5'
 
 services:
 
-  # redis:
-  #   image: redis:5-alpine
-  #   expose:
-  #     - "6379"
+  redis:
+    image: redis:5-alpine
+    expose:
+      - "6379"
 
   myapp:
-    build: .
+    build: 
+      context: .
+      target: debug
     security_opt:
       - seccomp:unconfined
-    entrypoint: dlv debug -l :2345 --headless --log --api-version=2
     working_dir: /go/src/app
     volumes:
       - .:/go/src/app
@@ -19,5 +20,5 @@ services:
     ports:
       - "8080:8080"
       - "2345:2345"
-    # command: dlv debug /go/src/app -l 0.0.0.0:2345 --headless --log --api-version=2 exec main
-    # command: go run main.go
+    # command: dlv debug -l :2345 --headless --log --api-version=2 --accept-multiclient
+    command: GIN_MODE=debug PORT=8080 go run main.go
