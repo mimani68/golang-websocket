@@ -11,7 +11,7 @@ services:
     build: .
     security_opt:
       - seccomp:unconfined
-    # entrypoint: dlv debug /go/src/app/main.go -l 0.0.0.0:2345 --headless --log --api-version=2
+    entrypoint: dlv debug -l :2345 --headless --log --api-version=2
     working_dir: /go/src/app
     volumes:
       - .:/go/src/app
