@@ -1,22 +1,13 @@
 package main
 
-import (
-	"log"
-	"net/http"
-	"strings"
-)
+import "github.com/gin-gonic/gin"
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		message := r.URL.Path
-		message = strings.TrimPrefix(message, "/")
-		message = "Hello, " + message + "!"
-
-		w.Write([]byte(message))
+	r := gin.Default()
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
 	})
-
-	log.Print("starting web server")
-	if err := http.ListenAndServe("0.0.0.0:8080", nil); err != nil {
-		log.Fatal(err)
-	}
+	r.Run() // listen and serve on 0.0.0.0:8080
 }

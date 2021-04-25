@@ -15,7 +15,7 @@ services:
     working_dir: /go/src/app
     volumes:
       - .:/go/src/app
-      - /home/dev/go/bin:/go/bin
+      - /home/dev/go:/go
     ports:
       - "8080:8080"
       - "2345:2345"

@@ -16,3 +16,10 @@ run main.go
 go get github.com/go-delve/delve/cmd/dlv@latest
 cd ~/go/src/work or ~/projectFolder
 ~/go/bin/dlv debug --headless --log -l 0.0.0.0:2345 --api-version=2
+
+## Docker compose
+
+docker-compose up --force-recreate
+
+## Test
+http :8080/ping
