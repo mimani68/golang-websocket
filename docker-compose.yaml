@@ -1,0 +1,23 @@
+version: '3.5'
+
+services:
+
+  # redis:
+  #   image: redis:5-alpine
+  #   expose:
+  #     - "6379"
+
+  myapp:
+    build: .
+    security_opt:
+      - seccomp:unconfined
+    # entrypoint: dlv debug /go/src/app/main.go -l 0.0.0.0:2345 --headless --log --api-version=2
+    working_dir: /go/src/app
+    volumes:
+      - .:/go/src/app
+      - /home/dev/go/bin:/go/bin
+    ports:
+      - "8080:8080"
+      - "2345:2345"
+    # command: dlv debug /go/src/app -l 0.0.0.0:2345 --headless --log --api-version=2 exec main
+    # command: go run main.go
