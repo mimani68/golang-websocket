@@ -23,12 +23,12 @@ docker run \
   -it \
   -p 3000:3000 \
   -p 2345:2345 \
-  -w /app \
-  -v ${PWD}:/app \
+  -w /go/src/app \
+  -v ${PWD}:/go/src/app \
   -v /home/dev/go:/go \
   -e GIN_MODE=debug \
   -e PORT=3000 \
-  golang:1.16.3-alpine go run main.go
+  golang:1.16.3-alpine go run *.go
 ```
 
 ## Hot reload
