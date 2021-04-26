@@ -1,16 +1,25 @@
 # Online Match Service
+
+## Technical spec
+
+* framework GOSF http://gosf.io/#client-broadcasts
+
 ## Init
 ```bash
-go mod init test.io/api/v1
+go mod init blackoak.cloud/balout/v2
 go list # all modules in this folder
 go install github.com/go-delve/delve/cmd/dlv@latest # for remote debuging
 code main.go
 go run main.go
+```
+## Build
+
+```bash
 go build main
 go build -ldflags="-s -w" main # optimized build
 ```
 
-## Run Project
+## Docker Compose
 ```bash
 docker-compose -p game up --force-recreate
 docker-compose -p game down --rm local --remove-orphans

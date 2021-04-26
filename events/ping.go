@@ -1,12 +1,29 @@
 package events
 
-import "github.com/ambelovsky/gosf"
+import (
+	"github.com/ambelovsky/gosf"
+)
 
-func Ping(client *gosf.Client, request *gosf.Request) *gosf.Message {
-	println(request.Message.Text)
-	// return gosf.NewSuccessMessage(request.Message.Text)
+func ping(client *gosf.Client, request *gosf.Request) *gosf.Message {
+	//
+	//
+	//
 	response := new(gosf.Message)
-	response.Success = true
-	response.Text = request.Message.Text
+	response.Text = "Pong"
+	//
+	// Broadcast
+	//
+	client.Broadcast("balout:system:ping", "example", response)
 	return response
+	//
+	// Online message
+	//
+	// return gosf.NewSuccessMessage(request.Message.Text + " alo")
+	//
+	//
+	// response := new(gosf.Message)
+	// response.Success = true
+	// response.Text = request.Message.Text
+	// return response
+
 }

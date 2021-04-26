@@ -1,8 +1,9 @@
 package main
 
 import (
+	"github.com/ambelovsky/gosf"
+
 	e "blackoak.cloud/balout/v2/events"
-	gosf "github.com/ambelovsky/gosf"
 )
 
 func init() {
@@ -15,10 +16,11 @@ func init() {
 		gosf.LoadConfig("server", "./config/server.json")
 	}
 
-	e.EventList()
+	e.Routers()
+
 }
 
-func websocket_app() {
+func BaloutOnlineGame() {
 	serverConfig := gosf.App.Config["server"].(map[string]interface{})
 	gosf.Startup(serverConfig)
 }
