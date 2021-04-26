@@ -14,9 +14,10 @@ func Routers() {
 	gosf.Listen("disconnect", echo)
 	gosf.Listen("connect", echo)
 
-	gosf.Listen("balout:player:invalid-token", playerIdentity)
-	gosf.Listen("balout:player:valid-token", playerIdentity)
-	gosf.Listen("balout:player:identity", playerIdentity)
+	player := new(Player)
+	gosf.Listen("balout:player:invalid-token", player.playerIdentity)
+	gosf.Listen("balout:player:valid-token", player.playerIdentity)
+	gosf.Listen("balout:player:identity", player.playerIdentity)
 
 	gosf.Listen("balout:match:start", matchStart)
 	gosf.Listen("balout:match:waiting", matchStart)

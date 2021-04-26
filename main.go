@@ -1,18 +1,30 @@
 package main
 
-// var ctx = context.Background()
+import (
+	"github.com/ambelovsky/gosf"
+
+	e "blackoak.cloud/balout/v2/events"
+)
+
+func init() {
+
+	if value, exist := gosf.App.Env["GOSF_ENV"]; exist && value != "dev" {
+		// Prod/Stage Config
+		gosf.LoadConfig("server", "./config/server-secure.json")
+	} else {
+		// Default and "dev" config
+		gosf.LoadConfig("server", "./config/server.json")
+	}
+
+	e.Routers()
+
+}
+
+func BaloutOnlineGame() {
+	serverConfig := gosf.App.Config["server"].(map[string]interface{})
+	gosf.Startup(serverConfig)
+}
 
 func main() {
-	// r := gin.Default()
-	// r.GET("/ping", func(c *gin.Context) {
-	// 	err := rbd.RedisClient().Set(ctx, "key", "value", 0).Err()
-	// 	if err != nil {
-	// 		panic(err)
-	// 	}
-	// 	c.JSON(200, gin.H{
-	// 		"message": "pong",
-	// 	})
-	// })
-	// r.Run() // listen and serve on 0.0.0.0:8080
 	BaloutOnlineGame()
 }

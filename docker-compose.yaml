@@ -16,11 +16,15 @@ services:
     environment: 
       PORT: 3000
     working_dir: /go/src/app
+    cap_add: 
+      - SYS_PTRACE
     volumes:
       - .:/go/src/app
       - /home/dev/go:/go
     ports:
       - "3000:3000"
       - "2345:2345"
-    # command: dlv debug -l :2345 --headless --log --api-version=2 --accept-multiclient
+    # For Debug Only
+    # command: dlv debug -l 0.0.0.0:2345 --headless --log --api-version=2 --accept-multiclient main.go
+    # For normal usage
     command: [ "go", "run", "main.go" ]

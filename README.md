@@ -56,11 +56,24 @@ go run main.go
 Launch file Setting (vscode debuger)
 ```
 
-### Remote debubg [HAS PROBLEM]
+### Remote debubg
 ```bash
 go get github.com/go-delve/delve/cmd/dlv@latest
 cd ~/go/src/work or ~/projectFolder
 ~/go/bin/dlv debug --headless --log -l :2345 --api-version=2
+```
+or 
+```bash
+dlv debug -l 0.0.0.0:2345 --headless --log --api-version=2 --accept-multiclient main.go
+```
+
+then run 
+```bash
+ws :3000/balout/api/v1/match/
+```
+or 
+```bash
+chrome ${workspace}/client-simulator/index.html
 ```
 
 
