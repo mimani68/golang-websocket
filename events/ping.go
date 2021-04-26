@@ -9,11 +9,8 @@ func ping(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	//
 	//
 	response := new(gosf.Message)
-	response.Text = "Pong"
-	//
-	// Broadcast
-	//
-	client.Broadcast("balout:system:ping", "example", response)
+	response.Text = "Pong!"
+	response.Success = true
 	return response
 	//
 	// Online message

@@ -17,11 +17,11 @@ function start() {
         //     'app': gameId,
         //     'token': jwt
         // },
-        // extraHeaders: {
-        //     'x-api-token': gameId,
-        //     'X-test-Version': 'balout.simulator/v1.1.1',
-        //     'X-authentication-token': jwt
-        // },
+        extraHeaders: {
+            'x-api-token': gameId,
+            'X-test-Version': 'balout.simulator/v1.1.1',
+            'X-authentication-token': jwt
+        },
         // transportOptions: {
         //     polling: {
         //         extraHeaders: {

@@ -13,8 +13,8 @@ services:
       target: debug
     security_opt:
       - seccomp:unconfined
-    environment: 
-      PORT: 3000
+    # environment: 
+    #   PORT: 3001
     working_dir: /go/src/app
     cap_add: 
       - SYS_PTRACE
@@ -27,4 +27,6 @@ services:
     # For Debug Only
     # command: dlv debug -l 0.0.0.0:2345 --headless --log --api-version=2 --accept-multiclient main.go
     # For normal usage
-    command: [ "go", "run", "main.go" ]
+    # command: [ "go", "run", "main.go" ]
+    # For live reload
+    command: gin --appPort 3001 --port 3000

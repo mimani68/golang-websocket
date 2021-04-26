@@ -43,11 +43,12 @@ docker run \
 ## Hot reload
 ```bash
 go get github.com/codegangsta/gin
+vim ~/config/server.json
 ~/go/bin/gin --appPort 3000 --port 3000
 ```
-or 
+or for local system that has nodemon
 ```
-npx nodemon --exec go run *.go --signal SIGTERM
+nodemon --exec go run main.go --signal SIGTERM
 ```
 
 ## Local debugging
