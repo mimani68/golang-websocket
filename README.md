@@ -13,6 +13,7 @@ go build -ldflags="-s -w" main # optimized build
 ## Run Project
 ```bash
 docker-compose -p game up --force-recreate
+docker-compose -p game down --rm local --remove-orphans
 ```
 
 ## Running in Standalone docker
@@ -29,6 +30,17 @@ docker run \
   -e PORT=3000 \
   golang:1.16.3-alpine go run main.go
 ```
+
+## Hot reload
+```bash
+go get github.com/codegangsta/gin
+~/go/bin/gin --appPort 3000 --port 3000
+```
+or 
+```
+npx nodemon --exec go run *.go --signal SIGTERM
+```
+
 ## Local debugging
 ```bash
 go run main.go
