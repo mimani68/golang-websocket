@@ -1,5 +1,6 @@
-
-# Start
+# Online Match Service
+## Init
+```bash
 go mod init test.io/api/v1
 go list # all modules in this folder
 go install github.com/go-delve/delve/cmd/dlv@latest # for remote debuging
@@ -7,22 +8,42 @@ code main.go
 go run main.go
 go build main
 go build -ldflags="-s -w" main # optimized build
+```
 
-# Running
-docker run --rm -p 8080:8080 -p 2345:2345 -w /app -it -v ${PWD}:/app -v /home/dev/go:/go -e GIN_MODE=debug -e PORT=8080 golang:1.16.3-alpine go run main.go
-run main.go
+## Run Project
+```bash
+docker-compose -p game up --force-recreate
+```
 
-# Local debugging
+## Running in Standalone docker
+```bash
+docker run \
+   --rm \
+  -it \
+  -p 3000:3000 \
+  -p 2345:2345 \
+  -w /app \
+  -v ${PWD}:/app \
+  -v /home/dev/go:/go \
+  -e GIN_MODE=debug \
+  -e PORT=3000 \
+  golang:1.16.3-alpine go run main.go
+```
+## Local debugging
+```bash
 go run main.go
 Launch file Setting (vscode debuger)
+```
 
-## Remote debubg [HAS PROBLEM]
+### Remote debubg [HAS PROBLEM]
+```bash
 go get github.com/go-delve/delve/cmd/dlv@latest
 cd ~/go/src/work or ~/projectFolder
 ~/go/bin/dlv debug --headless --log -l :2345 --api-version=2
+```
 
-## Docker compose
-docker-compose up --force-recreate
 
 ## Test
-http :8080/ping
+```bash
+http :3000/ping
+```

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Balout Simulator</title>
+    <script src="jquery-1.11.1.js"></script>
+    <script src="socket.io.min.js"></script>
+    <script src="client.socket.js"></script>
+</head>
+<body>
+
+<div>
+
+    <h5 id="sessionPlaceHolder">*</h5>
+
+    <div>
+        <label>
+            Server
+        </label>
+        <select id="serverAddress">
+            <option selected
+                    value="ws://localhost:3001">
+                local (ws://localhost:3001)
+            </option>
+            <option value="http://staging.asadiahmad.ir">
+                stage (http://staging.asadiahmad.ir)
+            </option>
+            <option value="https://kiakogame.ir">
+                production (https://kiakogame.ir)
+            </option>
+        </select>
+    </div>
+    <div>
+        <label>
+            Token
+        </label>
+        <select id="jwt">
+            <option selected value="JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTE3NDA0NDQ3MzIsImlkIjoiNjc2NmQxMjktOTI0ZS00ZGQ5LTk5ZDMtMzRhZDIwMjBhMTI3IiwiaWF0IjoxNjExNzM5NTQ0fQ.-05kdKLSTUmH1SflNVh-5uKZZYj-jq-hsj-ybN7Y_4o">
+                [local] player one
+            </option>
+            <option value="JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTA0NTI2ODQ4NTcsImlkIjoiMWE1OWZkYjQtZTViZS00MjMyLWE3ZWQtZjA1OGRhOTY4ODFhIiwiaWF0IjoxNjEwNDUxNzg0fQ._ubxv_KHKlyZcabqsshBDIz7uCt-afJEKCBjaLZzKu4">
+                [local] player two
+            </option>
+            <option value="JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTIxNjUwMzgyNjksImlkIjoiYWE1MmE4NjItYjhlMy00ZGYyLWFiZWYtZjBjMzgyOTY2NzAzIiwiaWF0IjoxNjEyMTY0MTM4fQ._fBxzFMzC73RxN8McX25rgMlFuoRWGXp6viu4pGrB20">
+                [prod] player one anonymous
+            </option>
+        </select>
+    </div>
+    <div>
+        <label>
+            namespace path
+        </label>
+        <select id="namespace">
+            <option value="a8839b6c-5f25-4546-a47e-aae581a514ba">balout</option>
+            <option value="/" selected>default</option>
+        </select>
+    </div>
+    <div>
+        <button onclick="start()">
+            Start
+        </button>
+    </div>
+</div>
+
+<br/>
+
+<div>
+    <h4>
+        Status
+    </h4>
+    <div>
+        <button id="ping">
+            ping
+        </button>
+    </div>
+    <div>
+        <button id="whoami">
+            Who Am I ?
+        </button>
+    </div>
+</div>
+
+<div>
+    <h4>Game</h4>
+    <div>
+        <button id="ready">
+            1) are you ready
+        </button>
+    </div>
+    <div>
+        <button id="play">
+            2) Play ;)
+        </button>
+    </div>
+    <div>
+        <button id="retrySendAnswer">
+            3) retry Send Answer
+        </button>
+    </div>
+    <div>
+        <button id="leave">
+            4) Leave game
+        </button>
+    </div>
+    <div>
+        <button id="buyCheat">
+            5) buy cheat
+        </button>
+    </div>
+</div>
+
+<div>
+    <h4>
+        Chat
+    </h4>
+    <div>
+        <div>
+            <input type="text" id="audiencePlayerId" placeholder="Audience Player Id">
+            <button id="sendMessage">
+                send message to other player
+            </button>
+        </div>
+    </div>
+</div>
+
+<div>
+    <h4>Development</h4>
+    <div>
+        <button id="dev">
+            dev
+        </button>
+    </div>
+    <div>
+        <button id="cleanDb">
+            cleanDb
+        </button>
+    </div>
+</div>
+
+</body>
+</html>
