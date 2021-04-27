@@ -14,7 +14,7 @@ func (controller Match) matchStart(client *gosf.Client, request *gosf.Request) *
 }
 
 func (controller Match) act(client *gosf.Client, request *gosf.Request) *gosf.Message {
-	fmt.Println(request.Message.Body["room"])
+	fmt.Println(request.Message.Room)
 	return gosf.NewSuccessMessage("Act")
 }
 

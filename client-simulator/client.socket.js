@@ -140,12 +140,9 @@ function start() {
     $('#play')
         .on('click', function () {
             socket.emit('balout:match:player:act', {
-                id: 1,
-                text: 'salam',
-                body: {
-                    room: roomId,
-                    newSerial: new Date().toISOString()
-                }})
+                room: /* roomId */ "24",
+                newSerial: new Date().toISOString()
+            })
         })
 
     $('#retrySendAnswer')

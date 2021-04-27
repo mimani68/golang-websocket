@@ -12,7 +12,7 @@ type Message struct {
 	Meta map[string]interface{} `json:"meta,omitempty"`
 	Body map[string]interface{} `json:"body,omitempty"`
 
-	Room string `json:"text,omitempty"`
+	Room string `json:"room,omitempty"`
 }
 
 // WithoutMeta removes meta information before returning a copy of the message

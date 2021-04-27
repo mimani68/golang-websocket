@@ -16,5 +16,4 @@ func OnDisconnectHandler(client *gosf.Client, request *gosf.Request) {
 
 func BeforeRequestHandler(client *gosf.Client, request *gosf.Request) {
 	fmt.Println("Before request hook")
-	// request.(map[string]interface{})
 }

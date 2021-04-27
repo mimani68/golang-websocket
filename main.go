@@ -2,8 +2,10 @@ package main
 
 import (
 	"os"
+	"strconv"
 
-	"github.com/ambelovsky/gosf"
+	// "github.com/ambelovsky/gosf"
+	"blackoak.cloud/balout/v2/helper/gosf"
 
 	e "blackoak.cloud/balout/v2/events"
 )
@@ -24,8 +26,9 @@ func init() {
 
 func BaloutOnlineGame() {
 	serverConfig := gosf.App.Config["server"].(map[string]interface{})
+	var port, _ = strconv.Atoi(os.Getenv("PORT"))
 	if len(os.Getenv("PORT")) != 0 {
-		serverConfig["PORT"] = os.Getenv("PORT")
+		serverConfig["port"] = port
 	}
 	gosf.Startup(serverConfig)
 }
