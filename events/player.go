@@ -3,7 +3,7 @@ package events
 import (
 	"fmt"
 
-	"github.com/ambelovsky/gosf"
+	"blackoak.cloud/balout/v2/helper/gosf"
 )
 
 type Player struct{}

@@ -132,39 +132,44 @@ function start() {
 
     $('#ready')
         .on('click', function () {
-            socket.emit('balout:match:player:ready', {})
+            socket.emit('balout:match:player:ready', {
+                room: 12
+            })
         })
 
     $('#play')
         .on('click', function () {
-            socket.emit('balout:match:player:act', JSON.stringify({
-                room: roomId,
-                newSerial: new Date().toISOString()
-            }))
+            socket.emit('balout:match:player:act', {
+                id: 1,
+                text: 'salam',
+                body: {
+                    room: roomId,
+                    newSerial: new Date().toISOString()
+                }})
         })
 
     $('#retrySendAnswer')
         .on('click', function () {
-            socket.emit('balout:match:player:act:retry', JSON.stringify({
+            socket.emit('balout:match:player:act:retry', {
                 room: roomId,
                 oldSerial: 'f4589',
                 newSerial: new Date().toISOString(),
                 value: 'سنگ'
-            }))
+            })
         })
 
     $('#buyCheat')
         .on('click', function () {
             socket.emit('balout:match:cheat', {
-                room: roomId
+                room: /* roomId */ 12
             })
         })
 
     $('#leave')
         .on('click', function () {
-            socket.emit('balout:match:player:leave', JSON.stringify({
+            socket.emit('balout:match:player:leave', {
                 room: roomId
-            }))
+            })
         })
 
 

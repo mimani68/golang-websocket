@@ -13,8 +13,8 @@ services:
       target: debug
     security_opt:
       - seccomp:unconfined
-    # environment: 
-    #   PORT: 3001
+    environment: 
+      PORT: 3001
     working_dir: /go/src/app
     cap_add: 
       - SYS_PTRACE

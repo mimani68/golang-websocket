@@ -1,7 +1,7 @@
 package events
 
 import (
-	"github.com/ambelovsky/gosf"
+	"blackoak.cloud/balout/v2/helper/gosf"
 )
 
 func ping(client *gosf.Client, request *gosf.Request) *gosf.Message {
