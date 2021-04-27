@@ -16,6 +16,7 @@ func Routers() {
 	gosf.OnBeforeRequest(BeforeRequestHandler)
 
 	player := new(Player)
+	gosf.Listen("balout:player:authenticate", player.authenticatePlayer)
 	gosf.Listen("balout:player:identity", player.playerIdentity)
 
 	match := new(Match)
