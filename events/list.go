@@ -16,8 +16,6 @@ func Routers() {
 	gosf.OnBeforeRequest(BeforeRequestHandler)
 
 	player := new(Player)
-	gosf.Listen("balout:player:invalid-token", player.playerIdentity)
-	gosf.Listen("balout:player:valid-token", player.playerIdentity)
 	gosf.Listen("balout:player:identity", player.playerIdentity)
 
 	match := new(Match)

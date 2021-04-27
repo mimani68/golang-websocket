@@ -50,6 +50,11 @@ or for local system that has nodemon
 ```
 nodemon --exec go run main.go --signal SIGTERM
 ```
+and finaly live reload in docker-compose
+```bash
+nodemon -e go --exec docker-compose -p game up  --force-recreate
+```
+
 
 ## Local debugging
 ```bash
