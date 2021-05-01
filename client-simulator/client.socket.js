@@ -182,7 +182,13 @@ function start() {
         .on('click', function () {
             socket.emit('balout:player:identity', {})
         })
-
+    $('#auth')
+        .on('click', function () {
+            socket.emit('balout:player:authenticate', {}, msg=>{
+                console.log(msg)
+            })
+        })
+        
     $('#dev')
         .on('click', function () {
             socket.emit('balout:dev', JSON.stringify({

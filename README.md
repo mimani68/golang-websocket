@@ -2,7 +2,15 @@
 
 ## Technical spec
 
-* framework GOSF http://gosf.io/#client-broadcasts
+| Title | Value | Version |
+|:---:|:---:|:---:|
+| Language | GoLang | v1.16.3 |
+| Realtime  | WebSocket | * |
+| framework | GOSF http://gosf.io/#client-broadcasts | * |
+| Hot reload | nodemon dlv | * |
+| development log | Logz.io | * |
+
+
 
 ## Init
 ```bash
@@ -37,7 +45,7 @@ docker run \
   -v /home/dev/go:/go \
   -e GIN_MODE=debug \
   -e PORT=3000 \
-  golang:1.16.3-alpine go run *.go
+  golang:1.16.3-alpine go run main.go
 ```
 
 ## Hot reload
