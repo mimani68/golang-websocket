@@ -39,7 +39,7 @@ func (p *Profile) ToMap() interface{} {
 func (p *Profile) Store() bool {
 	a := redis.RedisClient()
 	fmt.Print(a)
-	b := redis.SetKV("profile", p, 30)
+	b := redis.SetKV("profile:"+p.Id, p, 30)
 	fmt.Print(b)
 	return false
 }

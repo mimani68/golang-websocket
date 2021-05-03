@@ -17,14 +17,14 @@ var ctx = context.Background()
 var rdb *redis.Client
 
 //
-// #Redis
+// Redis Client
 //
 func RedisClient() *redis.Client {
 	l.Log("[DEBUG] " + config.REDIS_URL + ":" + config.REDIS_PORT)
 	rdb = redis.NewClient(&redis.Options{
 		Addr:     config.REDIS_URL + ":" + config.REDIS_PORT,
-		Password: config.REDIS_PASSWORD, // no password set
-		DB:       0,                     // use default DB
+		Password: config.REDIS_PASSWORD,
+		DB:       0,
 	})
 	return rdb
 }
