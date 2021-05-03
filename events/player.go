@@ -28,11 +28,10 @@ func (p *Player) authenticate(client *gosf.Client, request *gosf.Request) *gosf.
 	// else say login: false
 	a := new(isc.Http)
 	result := a.Get()
-	// byteSlice, err := json.Marshal(result)
-	// if err != nil {
-	// 	panic("marshal code.json: " + err.Error())
-	// }
-	return gosf.NewSuccessMessage("message goes here", result)
+	if result.Data.Id == "" {
+		return gosf.NewSuccessMessage("Invalid player")
+	}
+	return gosf.NewSuccessMessage("Welcome", result.ToMap())
 }
 
 func (p *Player) playerIdentity(client *gosf.Client, request *gosf.Request) *gosf.Message {
