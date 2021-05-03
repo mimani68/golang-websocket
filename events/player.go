@@ -3,8 +3,8 @@ package events
 import (
 	"fmt"
 
-	isc "blackoak.cloud/balout/v2/components/interservice_communication"
 	"blackoak.cloud/balout/v2/helper/gosf"
+	model "blackoak.cloud/balout/v2/model"
 )
 
 // type Store interface {
@@ -21,17 +21,14 @@ import (
 type Player struct{}
 
 func (p *Player) authenticate(client *gosf.Client, request *gosf.Request) *gosf.Message {
-	// token := string(request.Message.Token)
-	// get player from external server
-	// if player exist
-	// store token in redis and say loging: true
-	// else say login: false
-	a := new(isc.Http)
-	result := a.Get()
-	if result.Data.Id == "" {
+	token := string(request.Message.Token)
+	a := new(model.Profile)
+	profile := a.GetByToken(token)
+	if profile.Id == "" {
 		return gosf.NewSuccessMessage("Invalid player")
 	}
-	return gosf.NewSuccessMessage("Welcome", result.ToMap())
+	profile.Store()
+	return gosf.NewSuccessMessage("Welcome", profile.ToMap())
 }
 
 func (p *Player) playerIdentity(client *gosf.Client, request *gosf.Request) *gosf.Message {

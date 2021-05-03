@@ -2,10 +2,12 @@ version: '3.5'
 
 services:
 
-  # redis:
-  #   image: redis:5-alpine
-  #   expose:
-  #     - "6379"
+  redis:
+    image: redis:5-alpine
+    # expose:
+    #   - "6379"
+    ports: 
+      - "6379:6379"
 
   myapp:
     build: 
@@ -15,6 +17,9 @@ services:
       - seccomp:unconfined
     environment: 
       PORT: 3000
+      REDIS_URL: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ""
     working_dir: /go/src/app
     cap_add: 
       - SYS_PTRACE

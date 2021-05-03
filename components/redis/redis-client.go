@@ -1,16 +1,49 @@
 package redis
 
 import (
+	"context"
+	"encoding/json"
+	"time"
+
 	"github.com/go-redis/redis/v8"
+
+	l "blackoak.cloud/balout/v2/components/log"
+	config "blackoak.cloud/balout/v2/config"
 )
 
-// var ctx = context.Background()
+var ctx = context.Background()
 
+// Singleton redis connection string
+var rdb *redis.Client
+
+//
+// #Redis
+//
 func RedisClient() *redis.Client {
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     "redis:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
+	l.Log("[DEBUG] " + config.REDIS_URL + ":" + config.REDIS_PORT)
+	rdb = redis.NewClient(&redis.Options{
+		Addr:     config.REDIS_URL + ":" + config.REDIS_PORT,
+		Password: config.REDIS_PASSWORD, // no password set
+		DB:       0,                     // use default DB
 	})
 	return rdb
+}
+
+func SetKV(key string, inputStruct interface{}, expireTimeInSecond int) bool {
+	a, _ := json.Marshal(inputStruct)
+	set, err := rdb.SetNX(ctx, key, string(a), time.Duration(expireTimeInSecond)*time.Second).Result()
+	// err := rdb.Set(ctx, key, a, -1).Err()
+	if err != nil {
+		// panic(err)
+		return set
+	}
+	return set
+}
+
+func GetKV(key string) interface{} {
+	value, err := rdb.Get(ctx, key).Result()
+	if err != nil {
+		panic(err)
+	}
+	return value
 }
