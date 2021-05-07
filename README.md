@@ -22,9 +22,28 @@ go run main.go
 ```
 ## Build
 
+> https://docs.docker.com/develop/develop-images/multistage-build/
+### normal
+
 ```bash
-go build main
-go build -ldflags="-s -w" main # optimized build
+go build main.go
+
+```
+
+### optimized
+
+```bash
+go build -ldflags "-w" main.go     # optimized build
+go build -ldflags "-s -w" main.go  # best optimized setting
+```
+### optimized for docker alpine base image
+
+```bash
+CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main main.go
+```
+then access
+```bash
+docker run --rm -p 3000:3000 -it -v ${PWD}:/app -w /app alpine:latest ./main
 ```
 
 ## Docker Compose
@@ -36,7 +55,7 @@ docker-compose -p game down --rm local --remove-orphans
 ## Running in Standalone docker
 ```bash
 docker run \
-   --rm \
+  --rm \
   -it \
   -p 3000:3000 \
   -p 2345:2345 \

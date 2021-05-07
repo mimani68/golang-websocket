@@ -1,10 +1,14 @@
 package events
 
 import (
+	"fmt"
+
 	"blackoak.cloud/balout/v2/helper/gosf"
 )
 
 func Routers() {
+	fmt.Println("Server is running")
+
 	gosf.Listen("balout:system:ping", ping)
 	gosf.Listen("balout:system:error", echo)
 

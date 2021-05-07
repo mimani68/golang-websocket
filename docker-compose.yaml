@@ -4,10 +4,8 @@ services:
 
   redis:
     image: redis:5-alpine
-    # expose:
-    #   - "6379"
-    ports: 
-      - "6379:6379"
+    expose:
+      - "6379"
 
   myapp:
     build: 
@@ -24,7 +22,9 @@ services:
     cap_add: 
       - SYS_PTRACE
     volumes:
+      # mount app resource
       - .:/go/src/app
+      # for fast development
       - /home/dev/go:/go
     ports:
       - "3000:3000"
@@ -35,3 +35,5 @@ services:
     # command: [ "go", "run", "main.go" ]
     # For live reload
     # command: gin --appPort 3001 --port 3000
+    # production
+    # command: ./main
