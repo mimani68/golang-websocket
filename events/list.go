@@ -20,14 +20,12 @@ func Routers() {
 
 	gosf.Listen("balout:player:authenticate", authenticate)
 	gosf.Listen("balout:player:identity", playerIdentity)
-	// gosf.Listen("balout:player:identity", playerIdentity)
 
-	match := new(Match)
-	gosf.Listen("balout:match:player:ready", match.matchStart)
-	gosf.Listen("balout:match:player:act", match.act)
-	gosf.Listen("balout:match:player:act:retry", match.act)
-	gosf.Listen("balout:match:cheat", match.cheat)
-	gosf.Listen("balout:match:player:leave", match.leave)
+	gosf.Listen("balout:match:player:ready", matchStart)
+	gosf.Listen("balout:match:player:act", act)
+	gosf.Listen("balout:match:player:act:retry", act)
+	gosf.Listen("balout:match:cheat", cheat)
+	gosf.Listen("balout:match:player:leave", leave)
 
 	// gosf.Listen("balout:match:start", matchStart)
 	// gosf.Listen("balout:match:waiting", matchStart)
