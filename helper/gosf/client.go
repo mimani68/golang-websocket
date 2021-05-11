@@ -1,11 +1,17 @@
 package gosf
 
-import io "github.com/ambelovsky/gosf-socketio"
+import (
+	io "github.com/ambelovsky/gosf-socketio"
+)
 
 // Client represents a single connected client
 type Client struct {
 	channel *io.Channel
 	Rooms   []string
+}
+
+func (c *Client) GetSessinId() string {
+	return c.channel.Id()
 }
 
 // Join joins a user to a broadcast room

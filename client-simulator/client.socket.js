@@ -11,7 +11,7 @@ function start() {
     var jwt = $('#jwt').val()
     var BASE_URL = $('#serverAddress').val()
     var socket = io(BASE_URL, {
-        path: '/balout/api/v1/match/',
+        path: '/balout/api/v1/match/', 
         transports: ['websocket'],
         // query: {
         //     'app': gameId,

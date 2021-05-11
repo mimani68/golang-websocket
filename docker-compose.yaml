@@ -30,6 +30,7 @@ services:
       - "3000:3000"
       - "2345:2345"
     # For Debug Only
+    # change env PORT=3000
     # command: dlv debug -l 0.0.0.0:2345 --headless --log --api-version=2 --accept-multiclient main.go
     # For normal usage
     # command: [ "go", "run", "main.go" ]

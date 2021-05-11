@@ -1,6 +1,8 @@
 package model
 
 import (
+	"encoding/json"
+	"fmt"
 	"strings"
 
 	"github.com/brianvoe/gofakeit/v6"
@@ -19,6 +21,7 @@ type Player struct {
 	AccessToken  string `json:"accessToken,omitempty"`
 	RefreshToken string `json:"refreshToken,omitempty"`
 	DeviceId     string `json:"deviceId,omitempty"`
+	Session      string `json:"session,omitempty"`
 }
 
 var collectionString = "player"
@@ -77,8 +80,21 @@ func (p *Player) GetById(playerId string) *Player {
 	}
 }
 
-func (p *Player) ToMap() interface{} {
-	return str.ToMap(p)
+func (p *Player) GetPlayerBySessionId(playerId string) (bool, *Player) {
+	s, a := redis.GetKVJson(cnf.REDIS_RECORD_PREFIX + collectionString + ":" + p.Id)
+	if s && fmt.Sprintf("%T", a) == "string" {
+		var b interface{}
+		json.Unmarshal([]byte(a.(string)), b)
+		return s, b.(*Player)
+	}
+	if !s {
+		//
+		// Yeeh
+		// https://stackoverflow.com/questions/50697914/return-nil-for-a-struct-in-go
+		//
+		return s, &Player{}
+	}
+	return s, a.(*Player)
 }
 
 func (p *Player) Store() bool {
@@ -105,11 +121,12 @@ func (p *Player) shorternTokenGenerator(params ...string) string {
 		result := strings.Split(p.AccessToken, " ")
 		return result[1][:6]
 	}
-	// if len(params[0]) >= 6 {
-	// 	return params[0][:6]
-	// }
 	result := strings.Split(params[0], " ")
-	return result[0][:6]
+	return result[1][:6]
+}
+
+func (p *Player) ToMap() interface{} {
+	return str.ToMap(p)
 }
 
 // func (p *Player) CustomJSON(code int, i interface{}, f string) (err error) {

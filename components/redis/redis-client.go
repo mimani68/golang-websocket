@@ -43,8 +43,28 @@ func SetKV(key string, inputStruct interface{}, expireTimeInSecond int) bool {
 func GetKVJson(key string) (bool, interface{}) {
 	value, err := Rdb.Get(ctx, key).Result()
 	if err != nil {
+		//
+		// 01
+		//
 		// panic(err)
-		return false, "empty"
+
+		//
+		// 02
+		//
+		// var a struct {
+		// 	Status string
+		// } = struct{ Status string }{
+		// 	Status: "Failure",
+		// }
+		// return false, a
+
+		//
+		// 03
+		//
+		type aType struct {
+			Status string
+		}
+		return false, &aType{}
 	}
 	var a interface{}
 	json.Unmarshal([]byte(value), a)
