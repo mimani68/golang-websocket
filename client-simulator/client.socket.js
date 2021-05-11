@@ -13,15 +13,15 @@ function start() {
     var socket = io(BASE_URL, {
         path: '/balout/api/v1/match/',
         transports: ['websocket'],
-        query: {
-            'app': gameId,
-            'token': jwt
-        },
-        extraHeaders: {
-            'x-api-token': gameId,
-            'X-test-Version': 'balout.simulator/v1.1.1',
-            'X-authentication-token': jwt
-        },
+        // query: {
+        //     'app': gameId,
+        //     'token': jwt
+        // },
+        // extraHeaders: {
+        //     'x-api-token': gameId,
+        //     'X-test-Version': 'balout.simulator/v1.1.1',
+        //     'X-authentication-token': jwt
+        // },
         // transportOptions: {
         //     polling: {
         //         extraHeaders: {
@@ -184,7 +184,9 @@ function start() {
         })
     $('#auth')
         .on('click', function () {
-            socket.emit('balout:player:authenticate', {}, msg=>{
+            socket.emit('balout:player:authenticate', {
+                token: 'jwt BgSmtlGmRvbbbmbwIlTDaiVYuvSDTXXcghYHpUKgXknhxXPFSWUddlaSChOvmuZOKEeloHFoRBbrAtVhnWhREADIGnQGOCSgXqbhbjujUoxbStgmBUgrdTiirwinabcS'
+            }, msg=>{
                 console.log(msg)
             })
         })

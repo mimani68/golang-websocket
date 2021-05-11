@@ -16,13 +16,11 @@ func Routers() {
 
 	gosf.OnConnect(OnConnectHandler)
 	gosf.OnDisconnect(OnDisconnectHandler)
+	// gosf.OnBeforeRequest(BeforeRequestHandler)
 
-	gosf.OnBeforeRequest(BeforeRequestHandler)
-
-	player := new(Player)
-	gosf.Listen("balout:player:authenticate", player.authenticate)
-	gosf.Listen("balout:player:identity", player.playerIdentity)
-	// gosf.Listen("balout:player:identity", player.playerIdentity)
+	gosf.Listen("balout:player:authenticate", authenticate)
+	gosf.Listen("balout:player:identity", playerIdentity)
+	// gosf.Listen("balout:player:identity", playerIdentity)
 
 	match := new(Match)
 	gosf.Listen("balout:match:player:ready", match.matchStart)

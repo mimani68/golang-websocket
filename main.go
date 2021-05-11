@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	// "github.com/ambelovsky/gosf"
+	"blackoak.cloud/balout/v2/components/redis"
 	"blackoak.cloud/balout/v2/helper/gosf"
 
 	e "blackoak.cloud/balout/v2/events"
@@ -34,5 +35,6 @@ func BaloutOnlineGame() {
 }
 
 func main() {
+	redis.RedisClient()
 	BaloutOnlineGame()
 }
