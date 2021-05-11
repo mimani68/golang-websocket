@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -29,8 +30,14 @@ func RedisClient() *redis.Client {
 	return Rdb
 }
 
-func SetKV(key string, inputStruct interface{}, expireTimeInSecond int) bool {
-	a, _ := json.Marshal(inputStruct)
+func SetKV(key string, inputStruct map[string]interface{}, expireTimeInSecond int) bool {
+	var a []byte
+	// fmt.Println(inputStruct["data"])
+	// fmt.Printf("%T", inputStruct["data"])
+	a, _ = json.Marshal(inputStruct)
+	if fmt.Sprintf("%T", inputStruct["data"]) == "struct" {
+		a, _ = json.Marshal(inputStruct["data"])
+	}
 	set, err := Rdb.SetNX(ctx, key, string(a), time.Duration(expireTimeInSecond)*time.Second).Result()
 	// err := rdb.Set(ctx, key, a, -1).Err()
 	if err != nil {
@@ -66,7 +73,7 @@ func GetKVJson(key string) (bool, interface{}) {
 		}
 		return false, &aType{}
 	}
-	var a interface{}
-	json.Unmarshal([]byte(value), a)
+	var a map[string]interface{}
+	_ = json.Unmarshal([]byte(value), &a)
 	return true, a
 }

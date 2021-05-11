@@ -46,7 +46,7 @@ func playerIdentity(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	player := new(model.Player)
 	s, result := player.GetPlayerBySessionId(client.GetSessinId())
 	if s {
-		return gosf.NewSuccessMessage("Whoami", result)
+		return gosf.NewSuccessMessage("Whoami", result.ToMap())
 	} else {
 		return gosf.NewFailureMessage("Invalid player")
 	}

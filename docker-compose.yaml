@@ -12,7 +12,7 @@ services:
       context: .
       target: development
     environment: 
-      PORT: 3001
+      PORT: 3000
       REDIS_URL: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: ""
@@ -31,10 +31,10 @@ services:
       - "2345:2345"
     # For Debug Only
     # change env PORT=3000
-    # command: dlv debug -l 0.0.0.0:2345 --headless --log --api-version=2 --accept-multiclient main.go
+    command: dlv debug -l 0.0.0.0:2345 --headless --log --api-version=2 --accept-multiclient main.go
     # For normal usage
     # command: [ "go", "run", "main.go" ]
     # For live reload
-    command: gin --appPort 3001 --port 3000  # change env PORT=3001
+    # command: gin --appPort 3001 --port 3000  # change env PORT=3001
     # production
     # command: ./main

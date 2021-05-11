@@ -1,8 +1,6 @@
 package model
 
 import (
-	"encoding/json"
-	"fmt"
 	"strings"
 
 	"github.com/brianvoe/gofakeit/v6"
@@ -80,13 +78,16 @@ func (p *Player) GetById(playerId string) *Player {
 	}
 }
 
-func (p *Player) GetPlayerBySessionId(playerId string) (bool, *Player) {
-	s, a := redis.GetKVJson(cnf.REDIS_RECORD_PREFIX + collectionString + ":" + p.Id)
-	if s && fmt.Sprintf("%T", a) == "string" {
-		var b interface{}
-		json.Unmarshal([]byte(a.(string)), b)
-		return s, b.(*Player)
-	}
+func (p *Player) GetPlayerBySessionId(sessionId string) (bool, *Player) {
+	s, a := redis.GetKVJson(cnf.REDIS_RECORD_PREFIX + collectionString + ":session:" + sessionId)
+	var b interface{}
+	// mapstructure.Decode(b, &a)
+	b = str.ToStruct(a)
+	// if s && fmt.Sprintf("%T", a) == "string" {
+	// 	var b interface{}
+	// 	_ = json.Unmarshal([]byte(a.(string)), b)
+	// 	return s, b.(*Player)
+	// }
 	if !s {
 		//
 		// Yeeh
@@ -94,19 +95,23 @@ func (p *Player) GetPlayerBySessionId(playerId string) (bool, *Player) {
 		//
 		return s, &Player{}
 	}
-	return s, a.(*Player)
+	return s, b.(*Player)
 }
 
 func (p *Player) Store() bool {
 	//
 	// store with token id
 	//
-	storeOneStatus := redis.SetKV(cnf.REDIS_RECORD_PREFIX+collectionString+":token:"+p.shorternTokenGenerator(), p, 30)
+	storeOneStatus := redis.SetKV(cnf.REDIS_RECORD_PREFIX+collectionString+":token:"+p.shorternTokenGenerator(), p.ToMap(), cnf.REDIS_DATA_TTL)
 	//
-	//store with player id
+	// store with player id
 	//
-	storeTwoStatus := redis.SetKV(cnf.REDIS_RECORD_PREFIX+collectionString+":"+p.Id, p, 30)
-	if storeOneStatus && storeTwoStatus {
+	storeTwoStatus := redis.SetKV(cnf.REDIS_RECORD_PREFIX+collectionString+":id:"+p.Id, p.ToMap(), cnf.REDIS_DATA_TTL)
+	//
+	// store with Session id
+	//
+	storeThreeStatus := redis.SetKV(cnf.REDIS_RECORD_PREFIX+collectionString+":session:"+p.Session, p.ToMap(), cnf.REDIS_DATA_TTL)
+	if storeOneStatus && storeTwoStatus && storeThreeStatus {
 		return true
 	} else {
 		return false
@@ -119,14 +124,18 @@ func (p *Player) Store() bool {
 func (p *Player) shorternTokenGenerator(params ...string) string {
 	if len(params) <= 0 {
 		result := strings.Split(p.AccessToken, " ")
-		return result[1][:6]
+		return result[1][:10]
 	}
 	result := strings.Split(params[0], " ")
-	return result[1][:6]
+	return result[1][:10]
 }
 
-func (p *Player) ToMap() interface{} {
+func (p *Player) ToMap() map[string]interface{} {
 	return str.ToMap(p)
+}
+
+func (p *Player) ToStruct() struct{} {
+	return str.ToStruct(p)
 }
 
 // func (p *Player) CustomJSON(code int, i interface{}, f string) (err error) {
