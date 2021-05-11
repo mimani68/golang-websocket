@@ -5,6 +5,7 @@ import (
 
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/google/uuid"
+	"github.com/mitchellh/mapstructure"
 
 	str "blackoak.cloud/balout/v2/components/struct_helper"
 	// isc "blackoak.cloud/balout/v2/components/interservice_communication"
@@ -24,10 +25,11 @@ type Player struct {
 
 var collectionString = "player"
 
-func (p *Player) GetByToken(token string) *Player {
-	hasCache, data := redis.GetKVJson(cnf.REDIS_RECORD_PREFIX + collectionString + ":token:" + p.shorternTokenGenerator(token))
-	if hasCache {
-		return data.(*Player)
+func (p *Player) GetByToken(token string) (bool, *Player) {
+	s, data := redis.GetKVJson(cnf.REDIS_RECORD_PREFIX + collectionString + ":token:" + p.shorternTokenGenerator(token))
+	p.importFromInterface(data)
+	if s {
+		return true, p
 	} else {
 		//
 		// FIXME: change to real mode
@@ -36,10 +38,13 @@ func (p *Player) GetByToken(token string) *Player {
 		// data, _ := ioutil.ReadAll(res.Body)
 		// res.Body.Close()
 		// return data.(*Player)
+		// if res == nil {
+		// 	return false, &Player{}
+		// }
 		//
-		// Fake REsponse
+		// Fake Response
 		//
-		data := &Player{
+		a := &Player{
 			Id:           uuid.New().String(),
 			Nickname:     gofakeit.Username(),
 			LoginPlayer:  uuid.New().String(),
@@ -47,14 +52,15 @@ func (p *Player) GetByToken(token string) *Player {
 			RefreshToken: gofakeit.Regex(`jwt [a-zA-Z]{128}$`),
 			DeviceId:     gofakeit.MacAddress(),
 		}
-		return data
+		return true, a
 	}
 }
 
-func (p *Player) GetById(playerId string) *Player {
-	hasCache, data := redis.GetKVJson(cnf.REDIS_RECORD_PREFIX + collectionString + ":" + playerId)
-	if hasCache {
-		return data.(*Player)
+func (p *Player) GetById(playerId string) (bool, *Player) {
+	s, data := redis.GetKVJson(cnf.REDIS_RECORD_PREFIX + collectionString + ":" + playerId)
+	p.importFromInterface(data)
+	if s {
+		return s, p
 	} else {
 		//
 		// FIXME: change to real mode
@@ -63,10 +69,13 @@ func (p *Player) GetById(playerId string) *Player {
 		// data, _ := ioutil.ReadAll(res.Body)
 		// res.Body.Close()
 		// return data.(*Player)
+		// if res == nil {
+		// 	return false, &Player{}
+		// }
 		//
-		// Fake REsponse
+		// Fake Response
 		//
-		data := &Player{
+		a := &Player{
 			Id:           uuid.New().String(),
 			Nickname:     gofakeit.Username(),
 			LoginPlayer:  uuid.New().String(),
@@ -74,28 +83,39 @@ func (p *Player) GetById(playerId string) *Player {
 			RefreshToken: gofakeit.Regex(`jwt [a-zA-Z]{128}$`),
 			DeviceId:     gofakeit.MacAddress(),
 		}
-		return data
+		return true, a
 	}
 }
 
 func (p *Player) GetPlayerBySessionId(sessionId string) (bool, *Player) {
-	s, a := redis.GetKVJson(cnf.REDIS_RECORD_PREFIX + collectionString + ":session:" + sessionId)
-	var b interface{}
-	// mapstructure.Decode(b, &a)
-	b = str.ToStruct(a)
-	// if s && fmt.Sprintf("%T", a) == "string" {
-	// 	var b interface{}
-	// 	_ = json.Unmarshal([]byte(a.(string)), b)
-	// 	return s, b.(*Player)
-	// }
-	if !s {
+	s, data := redis.GetKVJson(cnf.REDIS_RECORD_PREFIX + collectionString + ":session:" + sessionId)
+	p.importFromInterface(data)
+	if s {
+		return s, p
+	} else {
 		//
-		// Yeeh
-		// https://stackoverflow.com/questions/50697914/return-nil-for-a-struct-in-go
+		// FIXME: change to real mode
 		//
-		return s, &Player{}
+		// res, _ := http.Get("http://auth:3000/player/skbq623ihr359")
+		// data, _ := ioutil.ReadAll(res.Body)
+		// res.Body.Close()
+		// return data.(*Player)
+		// if res == nil {
+		// 	return false, &Player{}
+		// }
+		//
+		// Fake Response
+		//
+		a := &Player{
+			Id:           uuid.New().String(),
+			Nickname:     gofakeit.Username(),
+			LoginPlayer:  uuid.New().String(),
+			AccessToken:  gofakeit.Regex(`jwt [a-zA-Z]{128}$`),
+			RefreshToken: gofakeit.Regex(`jwt [a-zA-Z]{128}$`),
+			DeviceId:     gofakeit.MacAddress(),
+		}
+		return true, a
 	}
-	return s, b.(*Player)
 }
 
 func (p *Player) Store() bool {
@@ -134,8 +154,8 @@ func (p *Player) ToMap() map[string]interface{} {
 	return str.ToMap(p)
 }
 
-func (p *Player) ToStruct() struct{} {
-	return str.ToStruct(p)
+func (p *Player) importFromInterface(input interface{}) {
+	mapstructure.Decode(input, &p)
 }
 
 // func (p *Player) CustomJSON(code int, i interface{}, f string) (err error) {

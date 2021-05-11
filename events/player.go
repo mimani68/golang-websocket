@@ -11,7 +11,7 @@ func authenticate(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	if token == "" {
 		return gosf.NewFailureMessage("Invalid Token")
 	}
-	profile := a.GetByToken(token)
+	_, profile := a.GetByToken(token)
 	if profile.Id == "" {
 		return gosf.NewFailureMessage("Invalid player")
 	}
