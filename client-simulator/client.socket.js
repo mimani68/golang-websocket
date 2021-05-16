@@ -132,8 +132,13 @@ function start() {
 
     $('#ready')
         .on('click', function () {
-            socket.emit('balout:match:player:ready', {
-                room: 12
+            socket.emit('balout:match:player:ready', { 
+                body: {
+                    room: "hdf49fh-i929-njd00s131"
+                }
+            },
+            msg => {
+                console.log(msg)
             })
         })
 

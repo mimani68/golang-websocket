@@ -1,12 +1,14 @@
 package events
 
 import (
+	"fmt"
+
 	"blackoak.cloud/balout/v2/helper/gosf"
 	model "blackoak.cloud/balout/v2/model"
 )
 
 func authenticate(client *gosf.Client, request *gosf.Request) *gosf.Message {
-	token := string(request.Message.Token)
+	token := fmt.Sprintf("%s", request.Message.Body["token"])
 	a := new(model.Player)
 	if token == "" {
 		return gosf.NewFailureMessage("Invalid Token")

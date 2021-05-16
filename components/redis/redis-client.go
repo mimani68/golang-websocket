@@ -32,7 +32,7 @@ func RedisClient() *redis.Client {
 
 func SetKV(key string, inputStruct map[string]interface{}, expireTimeInSecond int) bool {
 	var a []byte
-	// fmt.Println(inputStruct["data"])
+	// log.Log(inputStruct["data"])
 	// fmt.Printf("%T", inputStruct["data"])
 	a, _ = json.Marshal(inputStruct)
 	if fmt.Sprintf("%T", inputStruct["data"]) == "struct" {
