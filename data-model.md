@@ -10,4 +10,6 @@
     * username
     * accessToken
     * refreshToken
-
+* date
+* winer
+* status
