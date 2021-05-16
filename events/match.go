@@ -9,6 +9,7 @@ import (
 
 type RequestDto struct {
 	Room string `json:"room,omitempty"`
+	Word string `json:"word,omitempty"`
 }
 
 func matchStart(client *gosf.Client, request *gosf.Request) *gosf.Message {
@@ -18,8 +19,7 @@ func matchStart(client *gosf.Client, request *gosf.Request) *gosf.Message {
 		panic(err)
 	}
 	// ======== debug =====================================
-	log.Log(result)
-	log.Log("room: " + result.Room)
+	log.Log("[MATCH-START] room: " + result.Room)
 	// fmt.Printf("room: %s", result.Room) // failed to load
 	// return gosf.NewSuccessMessage("Start Game", struct_helper.ToMap(result))
 	// ======== debug =====================================
@@ -37,8 +37,13 @@ func act(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	if err != nil {
 		panic(err)
 	}
-	log.Log(result)
-	log.Log("room: " + result.Room)
+	log.Log("[ACT] room: " + result.Room)
+	log.Log("[ACT] word: " + result.Word)
+	//
+	// 1- check income word is correct form
+	// 2- inform other player that you play
+	// 3-
+	//
 	return gosf.NewSuccessMessage("Act")
 }
 
