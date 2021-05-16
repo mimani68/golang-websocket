@@ -7,7 +7,7 @@ services:
     expose:
       - "6379"
 
-  myapp:
+  match:
     build: 
       context: .
       target: development

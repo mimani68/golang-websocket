@@ -5,7 +5,7 @@ ENV GOPATH /go:$GOPATH
 ENV PATH /go/bin:$PATH
 ADD . /go/src/app
 WORKDIR /go/src/app
-RUN go get -u github.com/derekparker/delve/cmd/dlv@latest
+RUN go get -u github.com/go-delve/delve/cmd/dlv
 EXPOSE 3000
 CMD [ "go", "run", "main.go" ]
 
