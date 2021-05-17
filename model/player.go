@@ -7,10 +7,10 @@ import (
 	"github.com/google/uuid"
 	"github.com/mitchellh/mapstructure"
 
-	str "blackoak.cloud/balout/v2/components/struct_helper"
+	"blackoak.cloud/balout/v2/components/struct_helper"
 	// isc "blackoak.cloud/balout/v2/components/interservice_communication"
-	redis "blackoak.cloud/balout/v2/components/redis"
-	cnf "blackoak.cloud/balout/v2/config"
+	"blackoak.cloud/balout/v2/components/redis"
+	"blackoak.cloud/balout/v2/config"
 )
 
 type Player struct {
@@ -23,10 +23,9 @@ type Player struct {
 	Session      string `json:"session,omitempty"`
 }
 
-var collectionString = "player"
-
 func (p *Player) GetByToken(token string) (bool, *Player) {
-	s, data := redis.GetKVJson(cnf.REDIS_RECORD_PREFIX + collectionString + ":token:" + p.shorternTokenGenerator(token))
+	collectionString := "player"
+	s, data := redis.GetKVJson(config.REDIS_RECORD_PREFIX + collectionString + ":token:" + p.shorternTokenGenerator(token))
 	p.importFromInterface(data)
 	if s {
 		return true, p
@@ -57,7 +56,8 @@ func (p *Player) GetByToken(token string) (bool, *Player) {
 }
 
 func (p *Player) GetById(playerId string) (bool, *Player) {
-	s, data := redis.GetKVJson(cnf.REDIS_RECORD_PREFIX + collectionString + ":" + playerId)
+	collectionString := "player"
+	s, data := redis.GetKVJson(config.REDIS_RECORD_PREFIX + collectionString + ":" + playerId)
 	p.importFromInterface(data)
 	if s {
 		return s, p
@@ -88,7 +88,8 @@ func (p *Player) GetById(playerId string) (bool, *Player) {
 }
 
 func (p *Player) GetPlayerBySessionId(sessionId string) (bool, *Player) {
-	s, data := redis.GetKVJson(cnf.REDIS_RECORD_PREFIX + collectionString + ":session:" + sessionId)
+	collectionString := "player"
+	s, data := redis.GetKVJson(config.REDIS_RECORD_PREFIX + collectionString + ":session:" + sessionId)
 	p.importFromInterface(data)
 	if s {
 		return s, p
@@ -119,18 +120,19 @@ func (p *Player) GetPlayerBySessionId(sessionId string) (bool, *Player) {
 }
 
 func (p *Player) Store() bool {
+	collectionString := "player"
 	//
 	// store with token id
 	//
-	storeOneStatus := redis.SetKV(cnf.REDIS_RECORD_PREFIX+collectionString+":token:"+p.shorternTokenGenerator(), p.ToMap(), cnf.REDIS_DATA_TTL)
+	storeOneStatus := redis.SetKV(config.REDIS_RECORD_PREFIX+collectionString+":token:"+p.shorternTokenGenerator(), p.ToMap(), config.REDIS_DATA_TTL)
 	//
 	// store with player id
 	//
-	storeTwoStatus := redis.SetKV(cnf.REDIS_RECORD_PREFIX+collectionString+":id:"+p.Id, p.ToMap(), cnf.REDIS_DATA_TTL)
+	storeTwoStatus := redis.SetKV(config.REDIS_RECORD_PREFIX+collectionString+":id:"+p.Id, p.ToMap(), config.REDIS_DATA_TTL)
 	//
 	// store with Session id
 	//
-	storeThreeStatus := redis.SetKV(cnf.REDIS_RECORD_PREFIX+collectionString+":session:"+p.Session, p.ToMap(), cnf.REDIS_DATA_TTL)
+	storeThreeStatus := redis.SetKV(config.REDIS_RECORD_PREFIX+collectionString+":session:"+p.Session, p.ToMap(), config.REDIS_DATA_TTL)
 	if storeOneStatus && storeTwoStatus && storeThreeStatus {
 		return true
 	} else {
@@ -151,7 +153,7 @@ func (p *Player) shorternTokenGenerator(params ...string) string {
 }
 
 func (p *Player) ToMap() map[string]interface{} {
-	return str.ToMap(p)
+	return struct_helper.ToMap(p)
 }
 
 func (p *Player) importFromInterface(input interface{}) {

@@ -25,7 +25,8 @@ func Routers() {
 	gosf.Listen("balout:match:player:act", act)
 	// gosf.Listen("balout:match:player:act:retry", act)
 	gosf.Listen("balout:match:cheat", cheat)
-	gosf.Listen("balout:match:player:leave", leave)
+	gosf.Listen("balout:match:player:leave", leaveSingleRoom)
+	gosf.Listen("balout:match:player:leave:all", leaveAllRoom)
 
 	gosf.Listen("balout:chat:send:ack", sendMessage)
 	gosf.Listen("balout:chat:inbox:latest", latestMessage)

@@ -9,6 +9,9 @@ import (
 
 func authenticate(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	token := fmt.Sprintf("%s", request.Message.Body["token"])
+	if token == "%!s(<nil>)" || token == "" || len(token) <= 10 {
+		return gosf.NewFailureMessage("Empty or Invalid Token")
+	}
 	a := new(model.Player)
 	if token == "" {
 		return gosf.NewFailureMessage("Invalid Token")

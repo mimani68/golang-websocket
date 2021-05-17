@@ -131,9 +131,7 @@ function start() {
 
     $('#new-match')
     .on('click', function () {
-        socket.emit('balout:match:player:new-match', { 
-            body: {}
-        },
+        socket.emit('balout:match:player:new-match', {},
         msg => {
             console.log(msg)
             roomId = msg.body.room
@@ -221,7 +219,9 @@ function start() {
     $('#auth')
         .on('click', function () {
             socket.emit('balout:player:authenticate', {
-                token: 'jwt BgSmtlGmRvbbbmbwIlTDaiVYuvSDTXXcghYHpUKgXknhxXPFSWUddlaSChOvmuZOKEeloHFoRBbrAtVhnWhREADIGnQGOCSgXqbhbjujUoxbStgmBUgrdTiirwinabcS'
+                body: {
+                    token: 'jwt BgSmtlGmRvbbbmbwIlTDaiVY...'
+                }
             }, msg=>{
                 console.log(msg)
             })

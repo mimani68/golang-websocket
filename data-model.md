@@ -1,19 +1,10 @@
 # Model
 
 
-## Match
+## Room
 
 * id
 * type              string/enum {trun,...}
-* room              Room[]
-    * id
-    * title
-    * parent
-    * child
-    * type {public, private}
-    * max
-    * creator
-    * status
 * players           Player[]
     * id
     * nickname
