@@ -20,6 +20,7 @@ type Player struct {
 	AccessToken  string `json:"accessToken,omitempty"`
 	RefreshToken string `json:"refreshToken,omitempty"`
 	DeviceId     string `json:"deviceId,omitempty"`
+	Rooms        []Room
 	Session      string `json:"session,omitempty"`
 }
 
@@ -117,6 +118,16 @@ func (p *Player) GetPlayerBySessionId(sessionId string) (bool, *Player) {
 		}
 		return true, a
 	}
+}
+
+// FIXME:
+func (p *Player) AssignPlayerToRoom(room string) bool {
+	return true
+}
+
+// FIXME:
+func (p *Player) GetRoomOfPlayer(room string) []Room {
+	return []Room{}
 }
 
 func (p *Player) Store() bool {

@@ -7,10 +7,11 @@ import (
 )
 
 type Room struct {
-	Id          string `json:"id,omitempty"`
-	Type        string `json:"type,omitempty"`
-	MaxPlayer   int    `json:"max_player,omitempty"`
-	Players     []Player
+	Id        string `json:"id,omitempty"`
+	Type      string `json:"type,omitempty"`
+	MaxPlayer int    `json:"max_player,omitempty"`
+	// Players     []Player
+	Players     []string
 	JoiningList []Player
 	Groups      []Group
 	Policy      []Policy

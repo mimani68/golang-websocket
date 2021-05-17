@@ -44,13 +44,16 @@ func creatNewMatch(client *gosf.Client, request *gosf.Request) *gosf.Message {
 		Status: model.ActionEnum.ACTIVE,
 	})
 	// 3- join player to room
-	room.Players = append(room.Players, *me)
+	// room.Players = append(room.Players, *me)
+	room.Players = append(room.Players, me.Id)
 	// 4- update redis
 	s := room.Store()
 	if !s {
 		log.Log("[error] %w", s)
 		// panic()
 	}
+	w := new(model.Player)
+	w.AssignPlayerToRoom(room.Id)
 	log.Log("[DEBUG] %s" + "The new room created")
 	return gosf.NewSuccessMessage("Start Game", struct_helper.ToMap(room))
 }
@@ -112,7 +115,11 @@ func leaveSingleRoom(client *gosf.Client, request *gosf.Request) *gosf.Message {
 		// panic(err)
 		return gosf.NewFailureMessage("Empty room name")
 	}
-	log.Log("[LEAVE] room: " + room)
+	a := new(model.Player)
+	b := a.GetRoomOfPlayer(room)
+	if len(b) < 1 {
+		return gosf.NewFailureMessage("No room register for this user")
+	}
 	//
 	// 1- decrease online-win of player
 	// 2- increase opponent online-win
@@ -120,6 +127,7 @@ func leaveSingleRoom(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	// 4- update data in redis
 	//
 	// return gosf.NewSuccessMessage("Leave", struct_helper.ToMap(req))
+	log.Log("[LEAVE] room: " + room)
 	return gosf.NewSuccessMessage("Leave")
 }
 
