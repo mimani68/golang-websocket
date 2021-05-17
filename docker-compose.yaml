@@ -22,10 +22,13 @@ services:
   # HSET "movie:11006" title "Avatar" genre "Action" votes 9000 rating 9.8 release_year 2016  plot "Salam" ibmdb_id "tt000000" 
   # FT.ALTER idx:movie SCHEMA ADD plot TEXT WEIGHT 0.5
   # 
-  # redis-search:
+  # redis:
   #   image: redislabs/redisearch:2.0.9
   #   expose:
   #     - "6379"
+  # FT.CREATE idx:room ON HASH PREFIX 1 "room:" SCHEMA title TEXT SORTABLE
+  # FT.INFO idx:room
+  # FT.SEARCH idx:room "" LIMIT 0 10
 
   match:
     build: 

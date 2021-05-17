@@ -77,3 +77,9 @@ func GetKVJson(key string) (bool, interface{}) {
 	_ = json.Unmarshal([]byte(value), &a)
 	return true, a
 }
+
+func RunCommand(key string) *redis.CommandsInfoCmd {
+	var ctx = context.Background()
+	ctx.Value(key)
+	return Rdb.Command(ctx)
+}

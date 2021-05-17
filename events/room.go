@@ -13,13 +13,8 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
-type RequestDto struct {
-	Room string `json:"room,omitempty"`
-	Word string `json:"word,omitempty"`
-}
-
 func creatNewMatch(client *gosf.Client, request *gosf.Request) *gosf.Message {
-	var req RequestDto
+	var req model.RequestDto
 	err := mapstructure.Decode(request.Message.Body, &req)
 	if err != nil {
 		panic(err)
@@ -53,21 +48,21 @@ func creatNewMatch(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	// 4- update redis
 	s := room.Store()
 	if !s {
-		fmt.Println("[error] %w", s)
+		log.Log("[error] %w", s)
 		// panic()
 	}
-	fmt.Println("[DEBUG] %s" + "The new room created")
+	log.Log("[DEBUG] %s" + "The new room created")
 	return gosf.NewSuccessMessage("Start Game", struct_helper.ToMap(room))
 }
 
 func matchStart(client *gosf.Client, request *gosf.Request) *gosf.Message {
-	var result RequestDto
-	err := mapstructure.Decode(request.Message.Body, &result)
+	var req model.RequestDto
+	err := mapstructure.Decode(request.Message.Body, &req)
 	if err != nil {
 		panic(err)
 	}
 	// ======== debug =====================================
-	log.Log("[MATCH-START] room: " + result.Room)
+	log.Log("[MATCH-START] room: " + req.Room)
 	// fmt.Printf("room: %s", result.Room) // failed to load
 	// return gosf.NewSuccessMessage("Start Game", struct_helper.ToMap(result))
 	// ======== debug =====================================
@@ -77,68 +72,69 @@ func matchStart(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	// 3- update redis
 	// 4- send event for other players
 	//
-	return gosf.NewSuccessMessage("Start Game", struct_helper.ToMap(result))
+	return gosf.NewSuccessMessage("Start Game", struct_helper.ToMap(req))
 }
 
 func act(client *gosf.Client, request *gosf.Request) *gosf.Message {
-	var result RequestDto
-	err := mapstructure.Decode(request.Message.Body, &result)
+	var req model.RequestDto
+	err := mapstructure.Decode(request.Message.Body, &req)
 	if err != nil {
 		panic(err)
 	}
-	log.Log("[ACT] room: " + result.Room)
-	log.Log("[ACT] word: " + result.Word)
+	log.Log("[ACT] room: " + req.Room)
+	log.Log("[ACT] word: " + req.Word)
 	//
 	// 1- check income word is correct form
 	// 2- inform other player that you play
 	// 3- update data in redis
 	//
-	return gosf.NewSuccessMessage("Act", struct_helper.ToMap(result))
+	return gosf.NewSuccessMessage("Act", struct_helper.ToMap(req))
 }
 
 func cheat(client *gosf.Client, request *gosf.Request) *gosf.Message {
-	var result RequestDto
-	err := mapstructure.Decode(request.Message.Body, &result)
+	var req model.RequestDto
+	err := mapstructure.Decode(request.Message.Body, &req)
 	if err != nil {
 		panic(err)
 	}
-	log.Log("[CHEAT] room: " + result.Room)
+	log.Log("[CHEAT] room: " + req.Room)
 	//
 	// 1- reduse charge
 	// 2- inform other player that you play
 	// 3- update data in redis
 	//
-	return gosf.NewSuccessMessage("Cheat", struct_helper.ToMap(result))
+	return gosf.NewSuccessMessage("Cheat", struct_helper.ToMap(req))
 }
 
 func leaveSingleRoom(client *gosf.Client, request *gosf.Request) *gosf.Message {
-	var result RequestDto
-	err := mapstructure.Decode(request.Message.Body, &result)
-	if err != nil {
-		panic(err)
+	room := fmt.Sprintf("%s", request.Message.Body["room"])
+	if room == "" {
+		// panic(err)
+		return gosf.NewFailureMessage("Empty room name")
 	}
-	log.Log("[LEAVE] room: " + result.Room)
+	log.Log("[LEAVE] room: " + room)
 	//
 	// 1- decrease online-win of player
 	// 2- increase opponent online-win
 	// 3- inform other player that you left
 	// 4- update data in redis
 	//
-	return gosf.NewSuccessMessage("Leave", struct_helper.ToMap(result))
+	// return gosf.NewSuccessMessage("Leave", struct_helper.ToMap(req))
+	return gosf.NewSuccessMessage("Leave")
 }
 
 func leaveAllRoom(client *gosf.Client, request *gosf.Request) *gosf.Message {
-	var result RequestDto
-	err := mapstructure.Decode(request.Message.Body, &result)
+	var req model.RequestDto
+	err := mapstructure.Decode(request.Message.Body, &req)
 	if err != nil {
 		panic(err)
 	}
-	log.Log("[LEAVE-ALL] room: " + result.Room)
+	log.Log("[LEAVE-ALL] room: " + req.Room)
 	//
 	// 1- decrease online-win of player
 	// 2- increase opponent online-win
 	// 3- inform other player that you left
 	// 4- update data in redis
 	//
-	return gosf.NewSuccessMessage("Leave all rooms", struct_helper.ToMap(result))
+	return gosf.NewSuccessMessage("Leave all rooms", struct_helper.ToMap(req))
 }

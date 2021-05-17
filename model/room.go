@@ -55,6 +55,17 @@ func (room *Room) Store() bool {
 	}
 }
 
+func (room *Room) GetRoomsByPlayerId(userId string) Room {
+	collectionString := "room"
+	a := redis.SetKV(config.REDIS_RECORD_PREFIX+collectionString+":id:"+room.Id, room.ToMap(), config.REDIS_DATA_TTL)
+	// a := redis.RunCommand("FT.SEARCH ")
+	if a {
+		return Room{}
+	} else {
+		return Room{}
+	}
+}
+
 func (room *Room) ToMap() map[string]interface{} {
 	return struct_helper.ToMap(room)
 }
