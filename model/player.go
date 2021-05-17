@@ -126,8 +126,18 @@ func (p *Player) AssignPlayerToRoom(room string) bool {
 }
 
 // FIXME:
-func (p *Player) GetRoomOfPlayer(room string) []Room {
-	return []Room{}
+func (p *Player) LeaveFromRoom(room string) bool {
+	return true
+}
+
+// FIXME:
+func (p *Player) IncreaseOnlineFailed(room string) bool {
+	return true
+}
+
+// FIXME:
+func (p *Player) IncreaseOnlineWin(room string) bool {
+	return true
 }
 
 func (p *Player) Store() bool {

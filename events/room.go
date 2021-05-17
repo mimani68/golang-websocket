@@ -110,24 +110,39 @@ func cheat(client *gosf.Client, request *gosf.Request) *gosf.Message {
 }
 
 func leaveSingleRoom(client *gosf.Client, request *gosf.Request) *gosf.Message {
-	room := fmt.Sprintf("%s", request.Message.Body["room"])
-	if room == "" {
+	qq := fmt.Sprintf("%s", request.Message.Body["room"])
+	if qq == "" {
 		// panic(err)
 		return gosf.NewFailureMessage("Empty room name")
 	}
-	a := new(model.Player)
-	b := a.GetRoomOfPlayer(room)
-	if len(b) < 1 {
-		return gosf.NewFailureMessage("No room register for this user")
-	}
+	var room model.Room
+	var o model.Player
+	_, player := o.GetPlayerBySessionId(client.GetSessinId())
 	//
 	// 1- decrease online-win of player
+	player.IncreaseOnlineFailed(room.Id)
 	// 2- increase opponent online-win
+	for i := 0; i < len(room.Players); i++ {
+		// if (room.Players[i].(interface{}))["id"] == player.Id {
+		if room.Players[i] != player.Id {
+			var o model.Player
+			_, p := o.GetPlayerBySessionId(client.GetSessinId())
+			p.IncreaseOnlineWin(room.Id)
+		}
+	}
 	// 3- inform other player that you left
+	var q gosf.Message
+	q.Text = "Other player leave the game"
+	client.Broadcast(room.Id, "", &q)
 	// 4- update data in redis
-	//
-	// return gosf.NewSuccessMessage("Leave", struct_helper.ToMap(req))
-	log.Log("[LEAVE] room: " + room)
+	a_status := player.LeaveFromRoom(room.Id)
+	if !a_status {
+		return gosf.NewFailureMessage("No room register for this user")
+	}
+	b_status := room.RemovePlayerFromMatch(player.Id)
+	if !b_status {
+		return gosf.NewFailureMessage("No room register for this user")
+	}
 	return gosf.NewSuccessMessage("Leave")
 }
 
