@@ -14,16 +14,10 @@ import (
 )
 
 func creatNewMatch(client *gosf.Client, request *gosf.Request) *gosf.Message {
-	var req model.RequestDto
-	err := mapstructure.Decode(request.Message.Body, &req)
-	if err != nil {
-		panic(err)
-	}
-
 	// 1- get player data
 	me := new(model.Player)
-	_, player := me.GetPlayerBySessionId(client.GetSessinId())
-	if player.Id == "" {
+	success, player := me.GetPlayerBySessionId(client.GetSessinId())
+	if !success && player.Id == "" {
 		return gosf.NewFailureMessage("Invalid player")
 	}
 	// 2- create Room
@@ -39,21 +33,17 @@ func creatNewMatch(client *gosf.Client, request *gosf.Request) *gosf.Message {
 		},
 		Status: model.RoomEnum.ACTIVE,
 	}
-	room.Actions = append(room.Actions, model.Action{
-		Title:  "DO GAUSE",
-		Status: model.ActionEnum.ACTIVE,
-	})
+	room.DoAction("DO GUESS")
 	// 3- join player to room
 	// room.Players = append(room.Players, *me)
-	room.Players = append(room.Players, me.Id)
+	room.JoinPlayerToRoom(*me)
 	// 4- update redis
 	s := room.Store()
 	if !s {
 		log.Log("[error] %w", s)
 		// panic()
 	}
-	w := new(model.Player)
-	w.AssignPlayerToRoom(room.Id)
+
 	log.Log("[DEBUG] %s" + "The new room created")
 	return gosf.NewSuccessMessage("Start Game", struct_helper.ToMap(room))
 }
@@ -64,17 +54,24 @@ func matchStart(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	if err != nil {
 		panic(err)
 	}
-	// ======== debug =====================================
-	log.Log("[MATCH-START] room: " + req.Room)
-	// fmt.Printf("room: %s", result.Room) // failed to load
-	// return gosf.NewSuccessMessage("Start Game", struct_helper.ToMap(result))
-	// ======== debug =====================================
-	//
 	// 1- check if room is exists
+	p := new(model.Player)
+	success, player := p.GetPlayerBySessionId(client.GetSessinId())
+	if !success && player.Id == "" {
+		return gosf.NewFailureMessage("Invalid player")
+	}
 	// 2- join player to room
-	// 3- update redis
-	// 4- send event for other players
-	//
+	a := new(model.Room)
+	stat, r := a.GetById(req.Room)
+	if !stat && r.Id == "" {
+		return gosf.NewFailureMessage("Invalid room")
+	}
+	r.JoinPlayerToRoom(*player) // automatic join player.JoinToRoom()
+	client.Join(req.Room)
+	// 3- send event for other players
+	client.Broadcast(req.Room, "balout:match:start", &gosf.Message{
+		Text: "new player join room",
+	})
 	return gosf.NewSuccessMessage("Start Game", struct_helper.ToMap(req))
 }
 
@@ -124,7 +121,7 @@ func leaveSingleRoom(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	// 2- increase opponent online-win
 	for i := 0; i < len(room.Players); i++ {
 		// if (room.Players[i].(interface{}))["id"] == player.Id {
-		if room.Players[i] != player.Id {
+		if room.Players[i].Id != player.Id {
 			var o model.Player
 			_, p := o.GetPlayerBySessionId(client.GetSessinId())
 			p.IncreaseOnlineWin(room.Id)

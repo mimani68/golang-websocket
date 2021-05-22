@@ -122,6 +122,9 @@ func (p *Player) GetPlayerBySessionId(sessionId string) (bool, *Player) {
 
 // FIXME:
 func (p *Player) AssignPlayerToRoom(room string) bool {
+	a := new(Room)
+	a.Players = append(a.Players, *p)
+	a.Store()
 	return true
 }
 
