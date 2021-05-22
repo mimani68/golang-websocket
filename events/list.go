@@ -1,26 +1,26 @@
 package events
 
 import (
-	"fmt"
-
+	"blackoak.cloud/balout/v2/components/log"
 	"blackoak.cloud/balout/v2/helper/gosf"
 )
 
 func Routers() {
-	fmt.Println("Server is running")
+	log.Log("Server is running")
 
 	gosf.Listen("balout:system:ping", ping)
 	gosf.Listen("balout:system:error", echo)
 
 	gosf.Listen("balout:dev", dev)
 
-	gosf.OnConnect(OnConnectHandler)
-	gosf.OnDisconnect(OnDisconnectHandler)
+	// gosf.OnConnect(OnConnectHandler)
+	// gosf.OnDisconnect(OnDisconnectHandler)
 	// gosf.OnBeforeRequest(BeforeRequestHandler)
 
 	gosf.Listen("balout:player:authenticate", authenticate)
 	gosf.Listen("balout:player:identity", playerIdentity)
 
+<<<<<<< HEAD
 	gosf.Listen("balout:match:player:ready", matchStart)
 	gosf.Listen("balout:match:player:act", act)
 	gosf.Listen("balout:match:player:act:retry", act)
@@ -40,6 +40,15 @@ func Routers() {
 	// gosf.Listen("balout:match:player:act", matchStart)
 	// gosf.Listen("balout:match:player:act:retry", matchStart)
 	// gosf.Listen("balout:match:player:leave", matchStart)
+=======
+	gosf.Listen("balout:match:player:new-match", creatNewMatch)
+	gosf.Listen("balout:match:player:ready", matchStart)
+	gosf.Listen("balout:match:player:act", act)
+	// gosf.Listen("balout:match:player:act:retry", act)
+	gosf.Listen("balout:match:cheat", cheat)
+	gosf.Listen("balout:match:player:leave", leaveSingleRoom)
+	gosf.Listen("balout:match:player:leave:all", leaveAllRoom)
+>>>>>>> 0fad54ab6d4db74b48ebd67dd3385fbf2b8ae634
 
 	gosf.Listen("balout:chat:send:ack", sendMessage)
 	gosf.Listen("balout:chat:inbox:latest", latestMessage)

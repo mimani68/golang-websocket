@@ -32,7 +32,7 @@ func RedisClient() *redis.Client {
 
 func SetKV(key string, inputStruct map[string]interface{}, expireTimeInSecond int) bool {
 	var a []byte
-	// fmt.Println(inputStruct["data"])
+	// log.Log(inputStruct["data"])
 	// fmt.Printf("%T", inputStruct["data"])
 	a, _ = json.Marshal(inputStruct)
 	if fmt.Sprintf("%T", inputStruct["data"]) == "struct" {
@@ -76,4 +76,10 @@ func GetKVJson(key string) (bool, interface{}) {
 	var a map[string]interface{}
 	_ = json.Unmarshal([]byte(value), &a)
 	return true, a
+}
+
+func RunCommand(key string) *redis.CommandsInfoCmd {
+	var ctx = context.Background()
+	ctx.Value(key)
+	return Rdb.Command(ctx)
 }

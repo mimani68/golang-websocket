@@ -129,44 +129,76 @@ function start() {
      *
      ************************************/
 
-
+    $('#new-match')
+    .on('click', function () {
+        socket.emit('balout:match:player:new-match', {},
+        msg => {
+            console.log(msg)
+            roomId = msg.body.room
+        })
+    })
     $('#ready')
         .on('click', function () {
-            socket.emit('balout:match:player:ready', {
-                room: 12
+            socket.emit('balout:match:player:ready', { 
+                body: {
+                    room: roomId
+                }
+            },
+            msg => {
+                console.log(msg)
             })
         })
 
     $('#play')
         .on('click', function () {
             socket.emit('balout:match:player:act', {
-                room: /* roomId */ "24",
-                newSerial: new Date().toISOString()
+                body: {
+                    room: roomId,
+                    newSerial: new Date().toISOString()
+                }
+            },
+            msg => {
+                console.log(msg)
             })
         })
 
     $('#retrySendAnswer')
         .on('click', function () {
             socket.emit('balout:match:player:act:retry', {
-                room: roomId,
-                oldSerial: 'f4589',
-                newSerial: new Date().toISOString(),
-                value: 'سنگ'
+                body: {
+                    room: roomId,
+                    oldSerial: 'f4589',
+                    newSerial: new Date().toISOString(),
+                    value: 'سنگ'
+                }
+            },
+            msg => {
+                console.log(msg)
             })
         })
 
     $('#buyCheat')
         .on('click', function () {
             socket.emit('balout:match:cheat', {
-                room: /* roomId */ 12
+                body: {
+                    room: roomId
+                }
+            },
+            msg => {
+                console.log(msg)
             })
         })
 
     $('#leave')
         .on('click', function () {
             socket.emit('balout:match:player:leave', {
-                room: roomId
+                body: {
+                    room: roomId
+                }
             })
+        },
+        msg => {
+            console.log(msg)
         })
 
 
@@ -174,7 +206,9 @@ function start() {
     $('#ping')
         .on('click', function () {
             socket.emit('balout:system:ping', {
-                text: 'salam from client'
+                body: {
+                    text: 'salam from client'
+                }
             });
         })
 
@@ -185,7 +219,9 @@ function start() {
     $('#auth')
         .on('click', function () {
             socket.emit('balout:player:authenticate', {
-                token: 'jwt BgSmtlGmRvbbbmbwIlTDaiVYuvSDTXXcghYHpUKgXknhxXPFSWUddlaSChOvmuZOKEeloHFoRBbrAtVhnWhREADIGnQGOCSgXqbhbjujUoxbStgmBUgrdTiirwinabcS'
+                body: {
+                    token: 'jwt BgSmtlGmRvbbbmbwIlTDaiVY...'
+                }
             }, msg=>{
                 console.log(msg)
             })

@@ -15,8 +15,12 @@
 ## Init
 ```bash
 go mod init blackoak.cloud/balout/v2
-go list # all modules in this folder
+go list     # all modules in this folder
+go get .    # get all dependencies
 go install github.com/go-delve/delve/cmd/dlv@latest # for remote debuging
+go get -u github.com/go-delve/delve/cmd/dlv
+go get -u github.com/gin-gonic/gin
+go get github.com/go-redis/redis/v8
 code main.go
 go run main.go
 ```
