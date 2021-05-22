@@ -68,9 +68,15 @@ func matchStart(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	}
 	r.JoinPlayerToRoom(*player) // automatic join player.JoinToRoom()
 	client.Join(req.Room)
+	// 3- create word of game play
+	words := make(map[string]interface{})
+	words["word"] = "salam"
+	words["count"] = "1"
+	_ = r.SetWordsAssets(words)
 	// 3- send event for other players
 	client.Broadcast(req.Room, "balout:match:start", &gosf.Message{
 		Text: "new player join room",
+		Body: words,
 	})
 	return gosf.NewSuccessMessage("Start Game", struct_helper.ToMap(req))
 }
@@ -79,15 +85,33 @@ func act(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	var req model.RequestDto
 	err := mapstructure.Decode(request.Message.Body, &req)
 	if err != nil {
-		panic(err)
+		return gosf.NewFailureMessage("Invalid room")
 	}
-	log.Log("[ACT] room: " + req.Room)
-	log.Log("[ACT] word: " + req.Word)
+	if req.Room == "" {
+		return gosf.NewFailureMessage("Invalid room")
+	}
+	r := new(model.Room)
+	r.GetById(req.Room)
+	// Check player
+	p := new(model.Player)
+	s, player := p.GetPlayerBySessionId(client.GetSessinId())
+	if !s && player.Id == "" {
+		return gosf.NewFailureMessage("Invalid player")
+	}
 	//
 	// 1- check income word is correct form
-	// 2- inform other player that you play
-	// 3- update data in redis
-	//
+	if req.Word == "" {
+		return gosf.NewFailureMessage("Empty word")
+	}
+	if successAct := r.IsWordExists(req.Word); successAct {
+		// 2- update data in redis
+		r.DoAction("Correct Guess")
+		// 3- inform other player that you play
+		client.Broadcast(r.Id, "balout:match:player:act", &gosf.Message{
+			Text: "Player " + player.Id + " act correctly.",
+		})
+		return gosf.NewFailureMessage("Empty word")
+	}
 	return gosf.NewSuccessMessage("Act", struct_helper.ToMap(req))
 }
 

@@ -23,6 +23,7 @@ type Room struct {
 	Blocked     []Player
 	Winners     []Player
 	Losers      []Player
+	Words       map[string]interface{}
 	Owner       Player
 	Creator     Player
 	Date        DateModel
@@ -118,14 +119,19 @@ func (r *Room) JoinPlayerToRoom(p Player) bool {
 	return true
 }
 
-// func (r *Room) shorternTokenGenerator(params ...string) string {
-// 	if len(params) <= 0 {
-// 		result := strings.Split(r.AccessToken, " ")
-// 		return result[1][:10]
-// 	}
-// 	result := strings.Split(params[0], " ")
-// 	return result[1][:10]
-// }
+func (r *Room) SetWordsAssets(words map[string]interface{}) bool {
+	r.Words = words
+	return r.Store()
+}
+
+func (r *Room) IsWordExists(word string) bool {
+	for _, v := range r.Words {
+		if v == word {
+			return true
+		}
+	}
+	return false
+}
 
 func (r *Room) ToMap() map[string]interface{} {
 	return struct_helper.ToMap(r)
