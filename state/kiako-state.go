@@ -5,88 +5,63 @@ import (
 
 	"blackoak.cloud/balout/v2/components/log"
 	"blackoak.cloud/balout/v2/components/struct_helper"
+	"blackoak.cloud/balout/v2/config"
 
 	"blackoak.cloud/balout/v2/components/redis"
 	"blackoak.cloud/balout/v2/model"
 )
 
-const (
-	// Off StateType = "Off"
-	// On  StateType = "On"
+func (a *BaseAction) SetState(stateUniqueId string, playerId string, actionType string) bool {
+	statePool := a.GetState(stateUniqueId)
+	b := statePool.(struct {
+		Id     string
+		Events []interface{}
+	})
+	b.Events = append(b.Events, map[string]string{
+		"actin":  actionType,
+		"time":   "2012",
+		"player": playerId,
+	})
+	successStore := redis.SetKV("game:state:"+stateUniqueId, struct_helper.ToMap(b), config.REDIS_DATA_TTL)
+	if !successStore {
+		log.Log("Failed store 'game:state:'" + stateUniqueId + " in database")
+	}
+	return true
+}
 
+const (
 	None  StateType = "None"
 	Guess StateType = "Guess"
 	Cheat StateType = "Cheat"
-
-	// SwitchOff EventType = "SwitchOff"
-	// SwitchOn  EventType = "SwitchOn"
 
 	NoneEvent  EventType = "NoneEvent"
 	GuessEvent EventType = "GuessEvent"
 	CheatEvent EventType = "CheatEvent"
 )
 
-type GuessWordAction struct{}
+type GuessWordAction struct {
+	BaseAction
+}
 
 func (a *GuessWordAction) Execute(eventCtx EventContext) EventType {
 	fmt.Println("Player guess word")
-	//
-	// Store player new state
-	//
-	ctx := eventCtx.(struct {
-		Id     string
-		Player string
-	})
-	s, statePool := redis.GetKVJson("game:state:" + ctx.Id)
-	if !s {
-		log.Log("Redis database connection error in get 'game:state:'" + ctx.Id)
-	}
-	b := statePool.(struct {
-		Events []interface{}
-	})
-	b.Events = append(b.Events, map[string]string{
-		"actin":  "guess word",
-		"time":   "2012",
-		"player": ctx.Player,
-	})
-	successStore := redis.SetKV("game:state:"+ctx.Id, struct_helper.ToMap(b), 50000)
-	if !successStore {
-		log.Log("Failed store 'game:state:'" + ctx.Id + " in database")
-	}
+	ctx := eventCtx.(EventContextStruct)
+	a.SetState(ctx.Id, ctx.Player, "Guess word")
 	return NoOp
 }
 
-type CheatAction struct{}
+type CheatAction struct {
+	BaseAction
+}
 
 func (a *CheatAction) Execute(eventCtx EventContext) EventType {
 	fmt.Println("Player cheat in the game")
+	ctx := eventCtx.(EventContextStruct)
+	a.SetState(ctx.Id, ctx.Player, "Cheat word")
 	return NoOp
 }
 
-// type OffAction struct{}
-
-// func (a *OffAction) Execute(eventCtx EventContext) EventType {
-// 	fmt.Println("The light has been switched off")
-// 	return NoOp
-// }
-
-// type OnAction struct{}
-
-// func (a *OnAction) Execute(eventCtx EventContext) EventType {
-// 	fmt.Println("The light has been switched on")
-// 	return NoOp
-// }
-
 func NewGameSwitchFSM(r model.Room) *StateMachine {
-	//
-	// load state from redis
-	//
-	// s, statePool := redis.GetKVJson("game:state:" + r.Id)
-	s, _ := redis.GetKVJson("game:state:" + r.Id)
-	if !s {
-		log.Log("Redis database connection error in get 'game:state:'" + r.Id)
-	}
-	// log.Logger(statePool["id"])
 	return &StateMachine{
 		Id: r.Id,
 		States: States{

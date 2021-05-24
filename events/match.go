@@ -120,7 +120,10 @@ func act(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	//
 	// Only fill `state.Action.Execute()`
 	//
-	stateError := lsm.SendEvent(state.GuessEvent, nil)
+	stateError := lsm.SendEvent(state.GuessEvent, state.EventContextStruct{
+		Id:     req.Room,
+		Player: player.Id,
+	})
 	if stateError != nil {
 		fmt.Println("Couldn't set the initial state of the state machine, err: %v", err)
 	}
