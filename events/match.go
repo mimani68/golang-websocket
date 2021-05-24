@@ -15,6 +15,25 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
+<<<<<<< HEAD
+func matchStart(client *gosf.Client, request *gosf.Request) *gosf.Message {
+	fmt.Println(request.Message.Text)
+	return gosf.NewSuccessMessage("Start Game")
+}
+
+func act(client *gosf.Client, request *gosf.Request) *gosf.Message {
+	fmt.Println(request.Message.Room)
+	return gosf.NewSuccessMessage("Act")
+}
+
+func cheat(client *gosf.Client, request *gosf.Request) *gosf.Message {
+	fmt.Println(request.Message)
+	return gosf.NewSuccessMessage("Cheat")
+}
+
+func leave(client *gosf.Client, request *gosf.Request) *gosf.Message {
+	fmt.Println(request)
+=======
 func creatNewMatch(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	// 1- get player data
 	me := new(model.Player)
@@ -176,6 +195,7 @@ func leaveSingleRoom(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	if !b_status {
 		return gosf.NewFailureMessage("No room register for this user")
 	}
+>>>>>>> 0fad54ab6d4db74b48ebd67dd3385fbf2b8ae634
 	return gosf.NewSuccessMessage("Leave")
 }
 
