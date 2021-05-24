@@ -99,6 +99,13 @@ func act(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	if !s && player.Id == "" {
 		return gosf.NewFailureMessage("Invalid player")
 	}
+	//  FIXME: Implement state machine
+	// ---------------------------------------------------------
+	//  1) get state from redis if state was exists
+	// 	2) update new state
+	//  3) serialize state
+	//  4) store stat of room in redis
+	//
 	// 02 - check income word is correct form
 	words := balout_helper.WordExtractor(req.Value)
 	if words == "" {
@@ -107,11 +114,13 @@ func act(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	// 03 - control game state
 	r := new(model.Room)
 	r.GetById(req.Room)
+	// 04 - Room state machine
+	lsm := state.NewGameSwitchFSM(*r)
+	// > send new state + store in redis
 	//
-	// FIXME: Implement state machine
+	// Only fill `state.Action.Execute()`
 	//
-	lsm := state.NewGameSwitchFSM()
-	stateError := lsm.SendEvent(state.SwitchOff, nil)
+	stateError := lsm.SendEvent(state.GuessEvent, nil)
 	if stateError != nil {
 		fmt.Println("Couldn't set the initial state of the state machine, err: %v", err)
 	}

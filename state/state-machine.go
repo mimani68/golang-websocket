@@ -45,6 +45,9 @@ type States map[StateType]State
 
 // StateMachine represents the state machine.
 type StateMachine struct {
+	// Unique id of state
+	Id string
+
 	// Previous represents the previous state.
 	Previous StateType
 

@@ -5,7 +5,7 @@ import (
 	"blackoak.cloud/balout/v2/helper/gosf"
 )
 
-func Routers() {
+func EventsList() {
 	log.Log("Server is running")
 
 	gosf.Listen("balout:system:ping", ping)

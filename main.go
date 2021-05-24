@@ -12,7 +12,6 @@ import (
 )
 
 func init() {
-
 	if value, exist := gosf.App.Env["GOSF_ENV"]; exist && value != "dev" {
 		// Prod/Stage Config
 		gosf.LoadConfig("server", "./config/server-secure.json")
@@ -20,9 +19,7 @@ func init() {
 		// Default and "dev" config
 		gosf.LoadConfig("server", "./config/server.json")
 	}
-
-	e.Routers()
-
+	e.EventsList()
 }
 
 func BaloutOnlineGame() {
