@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"time"
 
+	"blackoak.cloud/balout/v2/components/balout_helper"
 	"blackoak.cloud/balout/v2/components/log"
 	"blackoak.cloud/balout/v2/components/struct_helper"
 	"blackoak.cloud/balout/v2/config"
 	"blackoak.cloud/balout/v2/helper/gosf"
 	"blackoak.cloud/balout/v2/model"
+	"blackoak.cloud/balout/v2/state"
 	"github.com/google/uuid"
 	"github.com/mitchellh/mapstructure"
 )
@@ -68,21 +70,22 @@ func matchStart(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	}
 	r.JoinPlayerToRoom(*player) // automatic join player.JoinToRoom()
 	client.Join(req.Room)
-	// 3- create word of game play
-	words := make(map[string]interface{})
-	words["word"] = "salam"
-	words["count"] = "1"
-	_ = r.SetWordsAssets(words)
-	// 3- send event for other players
-	client.Broadcast(req.Room, "balout:match:start", &gosf.Message{
-		Text: "new player join room",
-		Body: words,
-	})
+	// 3- Check if situcation is ready start game
+	s, room := r.StartGame()
+	if s {
+		// 4- send event for other players
+		client.Broadcast(req.Room, "balout:match:start", &gosf.Message{
+			Text: "new player join room",
+			// FIXME: encrypt payload
+			Body: room.Words,
+		})
+	}
+
 	return gosf.NewSuccessMessage("Start Game", struct_helper.ToMap(req))
 }
 
 func act(client *gosf.Client, request *gosf.Request) *gosf.Message {
-	var req model.RequestDto
+	var req model.ActionDto
 	err := mapstructure.Decode(request.Message.Body, &req)
 	if err != nil {
 		return gosf.NewFailureMessage("Invalid room")
@@ -90,20 +93,29 @@ func act(client *gosf.Client, request *gosf.Request) *gosf.Message {
 	if req.Room == "" {
 		return gosf.NewFailureMessage("Invalid room")
 	}
-	r := new(model.Room)
-	r.GetById(req.Room)
-	// Check player
+	// 01 - Check player
 	p := new(model.Player)
 	s, player := p.GetPlayerBySessionId(client.GetSessinId())
 	if !s && player.Id == "" {
 		return gosf.NewFailureMessage("Invalid player")
 	}
-	//
-	// 1- check income word is correct form
-	if req.Word == "" {
+	// 02 - check income word is correct form
+	words := balout_helper.WordExtractor(req.Value)
+	if words == "" {
 		return gosf.NewFailureMessage("Empty word")
 	}
-	if successAct := r.IsWordExists(req.Word); successAct {
+	// 03 - control game state
+	r := new(model.Room)
+	r.GetById(req.Room)
+	//
+	// FIXME: Implement state machine
+	//
+	lsm := state.NewGameSwitchFSM()
+	stateError := lsm.SendEvent(state.SwitchOff, nil)
+	if stateError != nil {
+		fmt.Println("Couldn't set the initial state of the state machine, err: %v", err)
+	}
+	if successAct := r.IsWordExists(words); successAct {
 		// 2- update data in redis
 		r.DoAction("Correct Guess")
 		// 3- inform other player that you play

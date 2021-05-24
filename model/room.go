@@ -119,6 +119,16 @@ func (r *Room) JoinPlayerToRoom(p Player) bool {
 	return true
 }
 
+func (r *Room) StartGame() (bool, *Room) {
+	// 01 check max player for room
+	// 02 create word for room
+	words := make(map[string]interface{})
+	words["word"] = "salam"
+	words["count"] = "1"
+	_ = r.SetWordsAssets(words)
+	return true, r
+}
+
 func (r *Room) SetWordsAssets(words map[string]interface{}) bool {
 	r.Words = words
 	return r.Store()
