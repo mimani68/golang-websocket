@@ -3,31 +3,8 @@ package state
 import (
 	"fmt"
 
-	"blackoak.cloud/balout/v2/components/log"
-	"blackoak.cloud/balout/v2/components/struct_helper"
-	"blackoak.cloud/balout/v2/config"
-
-	"blackoak.cloud/balout/v2/components/redis"
 	"blackoak.cloud/balout/v2/model"
 )
-
-func (a *BaseAction) SetState(stateUniqueId string, playerId string, actionType string) bool {
-	statePool := a.GetState(stateUniqueId)
-	b := statePool.(struct {
-		Id     string
-		Events []interface{}
-	})
-	b.Events = append(b.Events, map[string]string{
-		"actin":  actionType,
-		"time":   "2012",
-		"player": playerId,
-	})
-	successStore := redis.SetKV("game:state:"+stateUniqueId, struct_helper.ToMap(b), config.REDIS_DATA_TTL)
-	if !successStore {
-		log.Log("Failed store 'game:state:'" + stateUniqueId + " in database")
-	}
-	return true
-}
 
 const (
 	None  StateType = "None"
