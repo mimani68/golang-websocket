@@ -59,6 +59,9 @@ type StateMachine struct {
 
 	// mutex ensures that only 1 event is processed by the state machine at any given time.
 	mutex sync.Mutex
+
+	// last edit date
+	LastInitDate string
 }
 
 // getNextState returns the next state for the event given the machine's current

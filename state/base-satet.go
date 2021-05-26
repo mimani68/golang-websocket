@@ -8,8 +8,9 @@ import (
 )
 
 type EventContextStruct struct {
-	Id     string
-	Player string
+	Id      string
+	Player  string
+	Payload interface{}
 }
 
 type BaseAction struct{}
