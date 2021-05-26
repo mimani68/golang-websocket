@@ -53,7 +53,31 @@ func GameStateMachine(uniqueStateId string) (bool, *StateMachine) {
 	if uniqueStateId == "" {
 		return false, &StateMachine{}
 	}
-	ImportState(uniqueStateId)
+	//
+	// 01
+	//
+	// If server want get state of game in genetal mode.
+	// That means all state deserialize in one object and store
+	// in redis in one objcet
+	//
+	// object => seriallizer.ToGOB64(object)
+	// object => `bytes.Buffer{}`
+	//
+	// ImportState(uniqueStateId)
+
+	//
+	// 02
+	//
+	// Store only
+	//    b.Events = append(b.Events, map[string]string{
+	// 	   "actin":  actionType,
+	// 	   "time":   "2012",
+	// 	   "player": playerId,
+	//    })
+	// to `Event` of StateMachine{} and retrive from redis
+	//
+
+	//
 	// Singleton
 	if s.Id == "" {
 		s = &StateMachine{
